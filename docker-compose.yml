@@ -1,0 +1,61 @@
+version: '3.4'
+
+services:
+  user-service:
+    build:
+      context: .
+      dockerfile: services/UserService/Dockerfile
+    environment:
+      - ConnectionStrings__UserDB=Server=mysql-db;Database=UserServiceDb;User=root;Password=password
+    depends_on:
+      - mysql-db
+    ports:
+      - "5000:80"
+
+  booking-service:
+    build:
+      context: .
+      dockerfile: services/BookingService/Dockerfile
+    environment:
+      - ConnectionStrings__BookingDB=Server=mysql-db;Database=BookingServiceDb;User=root;Password=password
+    depends_on:
+      - mysql-db
+    ports:
+      - "5001:80"
+
+  property-service:
+    build:
+      context: .
+      dockerfile: services/PropertyService/Dockerfile
+    environment:
+      - ConnectionStrings__PropertyDB=Server=mysql-db;Database=PropertyServiceDb;User=root;Password=password
+    depends_on:
+      - mysql-db
+    ports:
+      - "5002:80"
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: services/NotificationService/Dockerfile
+    environment:
+      - ConnectionStrings__NotificationDB=mongodb+srv://root:yIyQ2kDcHbvQvLpl@stayeasenotifications.e3keg.mongodb.net/?retryWrites=true&w=majority&appName=StayEaseNotifications
+    depends_on:
+      - mongo-db
+    ports:
+      - "5003:80"
+
+  mysql-db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: user_service_db
+    ports:
+      - "3306:3306"
+
+  mongo-db:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_DATABASE: NotificationServiceDb
+    ports:
+      - "27017:27017"
