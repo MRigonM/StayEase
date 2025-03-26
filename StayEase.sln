@@ -1,14 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService", "services\UserService\UserService.csproj", "{F70DEE88-2BB7-4474-B5F1-303925C9A93C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService.API", "services\UserService.API\UserService.API.csproj", "{F70DEE88-2BB7-4474-B5F1-303925C9A93C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingService", "services\BookingService\BookingService.csproj", "{7C776328-EFC7-444F-8F11-5847C0C4E634}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingService.API", "services\BookingService.API\BookingService.API.csproj", "{7C776328-EFC7-444F-8F11-5847C0C4E634}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PropertyService", "services\PropertyService\PropertyService.csproj", "{48773106-53E2-44E0-BA4F-7268834FF012}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PropertyService.API", "services\PropertyService.API\PropertyService.API.csproj", "{48773106-53E2-44E0-BA4F-7268834FF012}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService", "services\NotificationService\NotificationService.csproj", "{18C9F11E-BEF2-4CE8-AAFC-7C7D20F31100}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService.API", "services\NotificationService.API\NotificationService.API.csproj", "{18C9F11E-BEF2-4CE8-AAFC-7C7D20F31100}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StayEase", "StayEase\StayEase.csproj", "{6D775E69-DD53-444A-97B6-0E0B75F9C694}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BookingService", "BookingService", "{C80A24FB-329F-4005-A1D4-546561F2E6D8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NotificationService", "NotificationService", "{22A7A048-7805-4D11-AC70-3F9F5B78CCEE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PropertyService", "PropertyService", "{3EC3BDCA-EBAF-4649-AFEA-49F04B3FE812}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UserService", "UserService", "{86798E6A-460C-4429-B834-81D1CB26B850}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,9 +38,11 @@ Global
 		{18C9F11E-BEF2-4CE8-AAFC-7C7D20F31100}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18C9F11E-BEF2-4CE8-AAFC-7C7D20F31100}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18C9F11E-BEF2-4CE8-AAFC-7C7D20F31100}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6D775E69-DD53-444A-97B6-0E0B75F9C694}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6D775E69-DD53-444A-97B6-0E0B75F9C694}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6D775E69-DD53-444A-97B6-0E0B75F9C694}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6D775E69-DD53-444A-97B6-0E0B75F9C694}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7C776328-EFC7-444F-8F11-5847C0C4E634} = {C80A24FB-329F-4005-A1D4-546561F2E6D8}
+		{18C9F11E-BEF2-4CE8-AAFC-7C7D20F31100} = {22A7A048-7805-4D11-AC70-3F9F5B78CCEE}
+		{48773106-53E2-44E0-BA4F-7268834FF012} = {3EC3BDCA-EBAF-4649-AFEA-49F04B3FE812}
+		{F70DEE88-2BB7-4474-B5F1-303925C9A93C} = {86798E6A-460C-4429-B834-81D1CB26B850}
 	EndGlobalSection
 EndGlobal
