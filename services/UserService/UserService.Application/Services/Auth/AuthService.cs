@@ -47,5 +47,11 @@ namespace UserService.Application.Services.Auth
 
             return await _tokenService.GenerateTokenAsync(user);
         }
+        
+        
+        public async Task<AuthResult> RefreshTokenAsync(string refreshToken)
+        {
+            return await _tokenService.RefreshTokenAsync(refreshToken);
+        }
     }
 }

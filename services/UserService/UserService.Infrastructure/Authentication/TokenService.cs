@@ -99,10 +99,8 @@ namespace UserService.Infrastructure.Authentication
             _context.RefreshTokens.Update(storedRefreshToken);
             await _context.SaveChangesAsync();
 
-            // Get user associated with refresh token
             var user = await _userManager.FindByIdAsync(storedRefreshToken.UserId);
-
-            return await GenerateTokenAsync(user); // Generate new access and refresh tokens
+            return await GenerateTokenAsync(user); 
         }
     }
 }
