@@ -1,7 +1,37 @@
-import React from 'react'
+import React , { useState }  from 'react'
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Navbar from '../../components/Navbar'
 
 const LogIn = () => {
+
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/login', formData);
+      navigate('/dashboard');
+    } catch (err) {
+      if (err.response && err.response.data && err.response.data.message) {
+        setError(err.response.data.message);
+      } else {
+        setError('Login failed. Please try again.');
+      }
+    }
+  };
+
+
+
   return (
     <div>
       <Navbar />
@@ -17,7 +47,7 @@ const LogIn = () => {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-900">
               Email address
@@ -28,6 +58,8 @@ const LogIn = () => {
                 name="email"
                 id="email"
                 autoComplete="email"
+                value={formData.email}
+                onChange={handleChange}
                 required
                 className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
               />
@@ -51,6 +83,8 @@ const LogIn = () => {
                 name="password"
                 id="password"
                 autoComplete="current-password"
+                value={formData.password}
+                onChange={handleChange}
                 required
                 className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
               />
@@ -69,9 +103,9 @@ const LogIn = () => {
 
         <p className="mt-10 text-center text-sm text-gray-500">
           Not a member?{" "}
-          <a href="#" className="font-semibold text-logoColor hover:text-indigo-500">
+          <Link className="font-semibold text-logoColor hover:text-indigo-500">
             Start a 14 day free trial
-          </a>
+          </Link>
         </p>
       </div>
     </div>
