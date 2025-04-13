@@ -14,4 +14,5 @@ public class Property: BaseEntity<string>
     public virtual Location Location { get; set; }
     public virtual ICollection<Image> Images { get; set; } = new HashSet<Image>();
     public virtual ICollection<PropertyCategory> PropertyCategories { get; set; } = new HashSet<PropertyCategory>();
+    public virtual ICollection<RoomService> RoomServices { get; set; } = new List<RoomService>();
 }
