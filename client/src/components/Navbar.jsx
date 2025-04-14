@@ -1,10 +1,11 @@
 import React from 'react'
-
+import { Link } from 'react-router-dom'
+import '../components/Navbar.css'
 const Navbar = () => {
   return (
     <>
-     <nav className="bg-gray-800">
-  <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+     <nav className="bg-white nav">
+  <div className="px-2 sm:px-6 lg:px-8 ">
     <div className="relative flex h-16 items-center justify-between">
       <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
         <button type="button" className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:outline-hidden focus:ring-inset" aria-controls="mobile-menu" aria-expanded="false">
@@ -20,55 +21,32 @@ const Navbar = () => {
           </svg>
         </button>
       </div>
-      <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-        <div className="flex shrink-0 items-center">
-          <img className="h-8 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company" />
+      <div className="logoLinks">
+      {/* flex shrink-0 items-center" */}
+        <div className="logoBox">
+          <Link to="/" className='logo'>Stay<span className='ease'>Ease</span></Link>
         </div>
         <div className="hidden sm:ml-6 sm:block">
-          <div className="flex space-x-4">
-            <a href="#" className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white" aria-current="page">Dashboard</a>
-            <a href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Team</a>
-            <a href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Projects</a>
-            <a href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Calendar</a>
+        {/* flex space-x-4 */}
+          <div className="links"> 
+            <Link  className="link rounded-md px-3 py-2 text-sm font-medium text-gray-300  hover:text-black">Dashboard</Link>
+            <Link  className="link rounded-md px-3 py-2 text-sm font-medium text-gray-300  hover:text-black">Team</Link>
+            <Link  className="link rounded-md px-3 py-2 text-sm font-medium text-gray-300  hover:text-black">Projects</Link>
+            <Link  className="link rounded-md px-3 py-2 text-sm font-medium text-gray-300  hover:text-black">Calendar</Link>
           </div>
         </div>
       </div>
-      <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-        <button type="button" className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
-          <span className="absolute -inset-1.5"></span>
-          <span className="sr-only">View notifications</span>
-          <svg className="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
-          </svg>
-        </button>
 
-        {/* <!-- Profile dropdown --> */}
-        <div className="relative ml-3">
-          <div>
-            <button type="button" className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-              <span className="absolute -inset-1.5"></span>
-              <span className="sr-only">Open user menu</span>
-              <img className="size-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
-            </button>
-          </div>
+      <div className='loginSignup'>
+          <Link to="/logIn" type="button" className="w-[150px] text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+            Log In
+          </Link>
 
-          {/* <!--
-            Dropdown menu, show/hide based on menu state.
-
-            Entering: "transition ease-out duration-100"
-              From: "transform opacity-0 scale-95"
-              To: "transform opacity-100 scale-100"
-            Leaving: "transition ease-in duration-75"
-              From: "transform opacity-100 scale-100"
-              To: "transform opacity-0 scale-95"
-          --> */}
-          <div className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 ring-1 shadow-lg ring-black/5 focus:outline-hidden" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-            <a href="#" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
-            <a href="#" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
-            <a href="#" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
-          </div>
-        </div>
+        <Link to="/register" type="button" className="w-[150px] text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+          Sign Up
+        </Link>
       </div>
+     
     </div>
   </div>
 
