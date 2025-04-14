@@ -31,10 +31,13 @@ const Register = () => {
       return;
     }
 
+    console.log({ email, password, confirmPassword }); 
+
     try {
-      const response = await axios.post('http://localhost:5000/api/register', {
+      const response = await axios.post('http://127.0.0.1:2001/api/Auth/register', {
         email,
         password,
+        confirmPassword
       });
   
       navigate('/logIn');
@@ -93,15 +96,13 @@ const Register = () => {
             </div>
 
             <div>
-              <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-900">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-900">
                 Confirm Password
               </label>
               <div className="mt-2">
                 <input
                   type="password"
-                  name="confirm-password"
-                  id="confirm-password"
-                  autoComplete="new-password"
+                  name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   required
