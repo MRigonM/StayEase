@@ -15,26 +15,7 @@ const LogIn = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setError('');
 
-  //   try {
-  //     const response = await axios.post('http://localhost:2001/api/Auth/login', formData);
-
-  //     const { accessToken, refreshToken } = response.data;
-
-  //     console.log(accessToken)
-  //     localStorage.setItem('accessToken', accessToken);
-  //     localStorage.setItem('refreshToken', refreshToken);
-  //   } catch (err) {
-  //     if (err.response && err.response.data && err.response.data.message) {
-  //       setError(err.response.data.message);
-  //     } else {
-  //       setError('Login failed. Please try again.');
-  //     }
-  //   }
-  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
