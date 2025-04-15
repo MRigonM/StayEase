@@ -32,7 +32,6 @@ namespace UserService.API.Controllers
 
             if (user == null)
                 return NotFound();
-
             return user;
         }
 
