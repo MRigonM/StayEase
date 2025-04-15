@@ -1,7 +1,17 @@
-import React from 'react'
+import React , { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import '../components/Navbar.css'
+import { getAccessToken, clearTokens } from '../authService/TokenService';
 const Navbar = () => {
+
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+      const token = getAccessToken();
+      setIsLoggedIn(!!token); // true if token exists
+    }, []);
+
   return (
     <>
      <nav className="bg-white nav">
@@ -37,15 +47,29 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className='loginSignup'>
-          <Link to="/logIn" type="button" className="w-[150px] text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
-            Log In
-          </Link>
-
-        <Link to="/register" type="button" className="w-[150px] text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
-          Sign Up
+      {isLoggedIn ? (
+       <button
+       onClick={() => {
+         clearTokens();
+         setIsLoggedIn(false);
+         window.location.href = '/'; // refresh or redirect to home
+       }}
+       className="w-[150px] text-white bg-red-500 hover:bg-red-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+     >
+       Log Out
+     </button>
+      ) : (
+        <div className='loginSignup'>
+        <Link to="/logIn" type="button" className="w-[150px] text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+          Log In
         </Link>
-      </div>
+
+      <Link to="/register" type="button" className="w-[150px] text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+        Sign Up
+      </Link>
+    </div>
+      )}
+     
      
     </div>
   </div>

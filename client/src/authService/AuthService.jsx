@@ -1,0 +1,22 @@
+import axios from 'axios';
+import { setTokens } from './TokenService';
+
+const API_URL = 'http://localhost:2001/api/Auth';
+
+export const loginUser = async (formData) => {
+  try {
+    const response = await axios.post(`${API_URL}/login`, formData);
+    const { accessToken, refreshToken } = response.data;
+
+    setTokens(accessToken, refreshToken);
+
+    return { success: true, accessToken };
+  } catch (error) {
+    let message = 'Login failed. Please try again.';
+    if (error.response?.data?.message) {
+      message = error.response.data.message;
+    }
+
+    return { success: false, message };
+  }
+};
