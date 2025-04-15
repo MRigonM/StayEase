@@ -2,6 +2,7 @@ import React , { useState }  from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../../components/Navbar'
+import { loginUser } from '../../authService/AuthService'; // Adjust the import path as necessary
 
 const LogIn = () => {
 
@@ -14,22 +15,20 @@ const LogIn = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    try {
-      const response = await axios.post('http://localhost:5000/api/login', formData);
-      navigate('/dashboard');
-    } catch (err) {
-      if (err.response && err.response.data && err.response.data.message) {
-        setError(err.response.data.message);
-      } else {
-        setError('Login failed. Please try again.');
-      }
+    const result = await loginUser(formData);
+
+    if (result.success) {
+      navigate("/")
+    } else {
+      setError(result.message);
     }
   };
-
 
 
   return (
