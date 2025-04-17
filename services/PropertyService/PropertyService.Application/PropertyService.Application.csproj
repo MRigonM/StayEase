@@ -12,6 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="14.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.13"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1">
@@ -28,9 +29,12 @@
 
     <ItemGroup>
       <Folder Include="Interfaces\" />
-      <Folder Include="Mappings\" />
       <Folder Include="Models\" />
       <Folder Include="Services\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\PropertyService.Domain\PropertyService.Domain.csproj" />
     </ItemGroup>
 
 </Project>
