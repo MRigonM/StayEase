@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import { Star, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import {Link} from "react-router-dom"
 
 // Dummy data for featured properties WILL BECOME DYNAMIC SOON
 const featuredProperties = [
@@ -142,7 +143,8 @@ export function FeaturedProperties() {
           onScroll={checkScrollButtons}
         >
           {featuredProperties.map((property) => (
-            <div
+            <Link
+               to="/propertyDetail"
               key={property.id}
               className="min-w-[300px] max-w-[300px] rounded-xl overflow-hidden flex-shrink-0 hover:shadow-lg transition-shadow border"
             >
@@ -185,7 +187,7 @@ export function FeaturedProperties() {
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 
