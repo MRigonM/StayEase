@@ -27,6 +27,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Dtos\" />
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\UserService.Infrastructure\UserService.Infrastructure.csproj" />
     </ItemGroup>
 

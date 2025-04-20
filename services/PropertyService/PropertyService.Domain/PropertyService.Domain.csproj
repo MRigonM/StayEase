@@ -13,7 +13,6 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.13"/>
-        <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="2.3.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1">
           <PrivateAssets>all</PrivateAssets>
@@ -29,8 +28,10 @@
 
     <ItemGroup>
       <Folder Include="Common\" />
+      <Folder Include="Entities\" />
       <Folder Include="Enums\" />
       <Folder Include="Helpers\" />
+      <Folder Include="Interfaces\" />
     </ItemGroup>
 
 </Project>
