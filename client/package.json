@@ -8,6 +8,7 @@
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.8.4",
+    "date-fns": "^4.1.0",
     "html2canvas": "^1.4.1",
     "intl": "^1.2.5",
     "js-cookie": "^3.0.5",
