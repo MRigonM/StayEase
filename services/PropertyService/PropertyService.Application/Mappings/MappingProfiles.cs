@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using PropertyService.Domain.DTOs;
 using PropertyService.Domain.Entities;
+using UserService.Domain.DTOs;
+using UserService.Domain.Entities;
 
 namespace PropertyService.Application.Mappings;
 
@@ -37,10 +39,18 @@ public class MappingProfiles : Profile
                 .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.PropertyCategories))
                 .ForMember(dest => dest.RoomServices, opt => opt.MapFrom(src => src.RoomServices))
                 .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Location.Country));
-            
-
+                
             CreateMap<RoomServicesToCreateDTO, RoomService>()
             .ForMember(dest => dest.PropertyId, opt => opt.MapFrom(src => src.PropertyId))
             .ForMember(dest => dest.Decscription, opt => opt.MapFrom(src => src.Description));
+            
+            CreateMap<Review, ReviewDto>()
+                .ForMember(dest => dest.Comment, opt => opt.MapFrom(src => src.Comment))
+                .ForMember(dest => dest.Stars, opt => opt.MapFrom(src => src.Stars));
+
+            CreateMap<ReviewDto, Review>().ReverseMap()
+                .ForMember(dest => dest.Comment, opt => opt.MapFrom(src => src.Comment))
+                .ForMember(dest => dest.Stars, opt => opt.MapFrom(src => src.Stars))
+                .ForMember(dest => dest.PropertyId, opt => opt.MapFrom(src => src.PropertyId));
     }
 }

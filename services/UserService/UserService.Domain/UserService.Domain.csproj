@@ -35,4 +35,8 @@
       <Folder Include="Interfaces\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\PropertyService\PropertyService.Domain\PropertyService.Domain.csproj" />
+    </ItemGroup>
+
 </Project>

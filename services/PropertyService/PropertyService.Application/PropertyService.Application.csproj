@@ -29,11 +29,10 @@
 
     <ItemGroup>
       <Folder Include="Interfaces\" />
-      <Folder Include="Models\" />
-      <Folder Include="Services\" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\UserService\UserService.Domain\UserService.Domain.csproj" />
       <ProjectReference Include="..\PropertyService.Domain\PropertyService.Domain.csproj" />
     </ItemGroup>
 
