@@ -112,12 +112,12 @@ const refreshToken = async () => {
 
     const res = await api.post(
       'http://localhost:2001/api/Auth/refresh',
-      { refreshToken: currentRefreshToken }, 
+      JSON.stringify(currentRefreshToken),
     {
     headers: {
-      'Content-Type': 'application/json', 
+      'Content-Type': 'application/json',
     },
-        
+
       }
     );
 
@@ -144,6 +144,6 @@ setInterval(() => {
   if (token) {
     refreshToken();
   }
-}, 30000); 
+}, 30000);
 
 export default api;
