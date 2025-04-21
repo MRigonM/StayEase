@@ -8,6 +8,7 @@ const Home = lazy(() => import('./pages/mainPages/Home'))
 const LogIn = lazy(() => import('./pages/LogIn/LogIn'))
 const Register = lazy(() => import('./pages/Register/Register'))
 const PropertyDetail = lazy(() => import('./pages/PropertyDetail/PropertyDetail'))
+const SearchResult = lazy(() => import('./pages/SearchResult/SearchResult'))
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route exact path="/logIn" element={<LogIn />} />
             <Route exact path="/register" element={<Register />} />
             <Route exact path="/propertyDetail" element={<PropertyDetail />} />
+            <Route exact path="/searchResult" element={<SearchResult />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Suspense>

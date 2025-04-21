@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { CalendarIcon, MapPin, Search, Users } from "lucide-react";
 import { format } from "date-fns";
+import { Link } from "react-router-dom";
 
 export function SearchBar() {
   const [date, setDate] = useState({
@@ -99,10 +100,12 @@ export function SearchBar() {
 
       {/* Search Button */}
       <div className="mt-6">
+      <Link to="/searchResult" className="mt-6">
         <button className="w-full md:w-auto bg-teal-600 text-white px-4 py-2 rounded-lg flex items-center justify-center hover:bg-teal-700">
           <Search className="h-4 w-4 mr-2" />
           Search Stays
         </button>
+      </Link>
       </div>
     </div>
   );
