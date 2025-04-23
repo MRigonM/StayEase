@@ -51,12 +51,17 @@ export default function Navbar() {
 
         {/* Desktop Navigation */}
         <nav className="hidden items-center gap-6 md:flex">
-        <Link
+          {
+            isLoggedIn ? (
+              <Link
             to="/dashboard"
             className="text-sm font-medium text-gray-700 hover:text-rose-500"
           >
             Dashboard
           </Link>
+            ) : null
+          }
+       
           <Link
             to="/explore"
             className="text-sm font-medium text-gray-700 hover:text-rose-500"
@@ -94,7 +99,7 @@ export default function Navbar() {
                 <div className="absolute right-0 w-48 mt-2 origin-top-right bg-white shadow-lg rounded-md ring-1 ring-black ring-opacity-5 z-50">
                   <ul className="py-1 text-sm text-gray-700">
                     <li>
-                      <Link to="/profile" className="block px-4 py-2">
+                      <Link to="/profilePage" className="block px-4 py-2">
                         Profile
                       </Link>
                     </li>
