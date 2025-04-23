@@ -51,6 +51,12 @@ export default function Navbar() {
 
         {/* Desktop Navigation */}
         <nav className="hidden items-center gap-6 md:flex">
+        <Link
+            to="/dashboard"
+            className="text-sm font-medium text-gray-700 hover:text-rose-500"
+          >
+            Dashboard
+          </Link>
           <Link
             to="/explore"
             className="text-sm font-medium text-gray-700 hover:text-rose-500"

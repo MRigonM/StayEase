@@ -9,6 +9,7 @@ const LogIn = lazy(() => import('./pages/LogIn/LogIn'))
 const Register = lazy(() => import('./pages/Register/Register'))
 const PropertyDetail = lazy(() => import('./pages/PropertyDetail/PropertyDetail'))
 const SearchResult = lazy(() => import('./pages/SearchResult/SearchResult'))
+const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'))
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route exact path="/register" element={<Register />} />
             <Route exact path="/propertyDetail" element={<PropertyDetail />} />
             <Route exact path="/searchResult" element={<SearchResult />} />
+            <Route exact path="/dashboard" element={<Dashboard />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Suspense>
