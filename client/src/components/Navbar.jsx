@@ -75,7 +75,7 @@ export default function Navbar() {
             Bookings
           </Link>
           <Link
-            to="/host"
+            to="/hostYourHome"
             className="text-sm font-medium text-gray-700 hover:text-rose-500"
           >
             Host Your Home

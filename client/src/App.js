@@ -11,6 +11,7 @@ const PropertyDetail = lazy(() => import('./pages/PropertyDetail/PropertyDetail'
 const SearchResult = lazy(() => import('./pages/SearchResult/SearchResult'))
 const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'))
 const ProfilePage = lazy(() => import('./pages/Profile/ProfilePage'))
+const HostYourHomePage = lazy(() => import('./pages/HostYourHomePage/HostYourHomePage'))
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route exact path="/searchResult" element={<SearchResult />} />
             <Route exact path="/dashboard" element={<Dashboard />} />
             <Route exact path="/profilePage" element={<ProfilePage />} />
+            <Route exact path="/hostYourHome" element={<HostYourHomePage />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Suspense>
