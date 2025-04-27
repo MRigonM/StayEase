@@ -1,4 +1,5 @@
 import './App.css';
+import Navbar from './components/Navbar';
 import './index.css';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
@@ -11,7 +12,7 @@ const PropertyDetail = lazy(() => import('./pages/PropertyDetail/PropertyDetail'
 const SearchResult = lazy(() => import('./pages/SearchResult/SearchResult'))
 const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'))
 const ProfilePage = lazy(() => import('./pages/Profile/ProfilePage'))
-const HostYourHomePage = lazy(() => import('./pages/HostYourHomePage/HostYourHomePage'))
+const HostYourHomePage = lazy(() => import('./pages/HostAHousePage/HostAHousePage'))
 
 function App() {
   return (
@@ -19,7 +20,6 @@ function App() {
       <Router>
         <Suspense>
           <Routes>
-
             <Route exact path="/" element={<Home />} />
             <Route exact path="/logIn" element={<LogIn />} />
             <Route exact path="/register" element={<Register />} />
