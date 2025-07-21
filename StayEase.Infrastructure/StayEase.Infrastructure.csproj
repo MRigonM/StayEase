@@ -27,4 +27,8 @@
       <Folder Include="Specifications\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\StayEase.Domain\StayEase.Domain.csproj" />
+    </ItemGroup>
+
 </Project>

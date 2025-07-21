@@ -17,4 +17,10 @@
       <Folder Include="Validators\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\StayEase.Application\StayEase.Application.csproj" />
+      <ProjectReference Include="..\StayEase.Domain\StayEase.Domain.csproj" />
+      <ProjectReference Include="..\StayEase.Infrastructure\StayEase.Infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>
