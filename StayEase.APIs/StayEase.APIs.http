@@ -1,0 +1,6 @@
+@StayEase.APIs_HostAddress = http://localhost:5282
+
+GET {{StayEase.APIs_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
