@@ -20,4 +20,11 @@
       <_ContentIncludedByDefault Remove="wwwroot\exampleJsInterop.js" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Data\" />
+      <Folder Include="Migrations\" />
+      <Folder Include="Repositories\" />
+      <Folder Include="Specifications\" />
+    </ItemGroup>
+
 </Project>
