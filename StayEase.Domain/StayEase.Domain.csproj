@@ -34,7 +34,6 @@
     <ItemGroup>
       <Folder Include="DataTransferObjects\" />
       <Folder Include="Entities\" />
-      <Folder Include="Idenitity\" />
       <Folder Include="Interfaces\" />
     </ItemGroup>
 
