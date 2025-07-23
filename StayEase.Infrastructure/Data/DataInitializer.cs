@@ -6,7 +6,7 @@ namespace StayEase.Infrastructure.Data;
 
     public class DataInitializer
     {
-        public static async Task SeedAsync(DbContext context, RoleManager<IdentityRole> roleManager)
+        public static async Task SeedAsync(AppDbContext context, RoleManager<IdentityRole> roleManager)
         {
             var roles = new List<string> { "Admin", "Owner", "Customer" };
 

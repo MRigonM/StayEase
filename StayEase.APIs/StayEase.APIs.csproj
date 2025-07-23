@@ -28,4 +28,8 @@
       <ProjectReference Include="..\StayEase.Infrastructure\StayEase.Infrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\Files\Image\UserProfile\" />
+    </ItemGroup>
+
 </Project>

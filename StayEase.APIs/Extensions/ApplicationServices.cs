@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 using StayEase.APIs.Validators;
+using StayEase.Infrastructure.Data;
 
 namespace StayEase.APIs.Extensions;
 
@@ -15,7 +16,7 @@ public static class ApplicationServices
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection Services, IConfiguration Configuration)
         {
-            Services.AddDbContext<DbContext>(options =>
+            Services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
                 options.UseLazyLoadingProxies();
@@ -33,7 +34,7 @@ public static class ApplicationServices
                 options.SignIn.RequireConfirmedEmail = true;
                 options.Tokens.EmailConfirmationTokenProvider = TokenOptions.DefaultEmailProvider;
             })
-            .AddEntityFrameworkStores<DbContext>()
+            .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
 
             // AutoMapper Configuration
