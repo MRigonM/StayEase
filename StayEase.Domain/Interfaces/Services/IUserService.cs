@@ -1,4 +1,4 @@
-﻿using Airbnb.Domain;
+﻿using StayEase.Domain;
 using StayEase.Domain.DataTransferObjects;
 using StayEase.Domain.Identity;
 
