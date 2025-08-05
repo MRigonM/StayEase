@@ -54,7 +54,7 @@ namespace StayEase.APIs.Controllers
             return Ok(await _userService.EmailConfirmation(email, code));
         }
 
-        [HttpGet("ForgetPassword")]
+        [HttpPost("ForgetPassword")]
         public async Task<ActionResult<Responses>> ForgetPassword([FromBody]ForgetPasswordDto forgetPassword)
         {
             var validation=await _forgetPasswordValidator.ValidateAsync(forgetPassword);

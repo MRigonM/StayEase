@@ -34,12 +34,13 @@ namespace StayEase.Application.Services
             }
 
             var authKeyInByets = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Token:Key"]));
+            double expiryDays = double.TryParse(_configuration["Token:ExpiryDays"], out var days) ? days : 7;
            
             var JwtObject = new JwtSecurityToken(
                 issuer: _configuration["Token:Issuer"],
                 audience: _configuration["Token:Audience"],
                 claims: userClaims,
-                expires: DateTime.Now.AddDays(double.Parse(_configuration["Token:ExpiryDays"])),
+                expires: DateTime.Now.AddDays(expiryDays),
                 signingCredentials: new SigningCredentials(authKeyInByets, SecurityAlgorithms.HmacSha256/*HmacSha256Signature*/)
             );
             return new JwtSecurityTokenHandler().WriteToken(JwtObject);
