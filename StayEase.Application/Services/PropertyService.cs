@@ -1,33 +1,155 @@
-﻿using StayEase.Domain;
+﻿using System.Net;
+using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using StayEase.Application.Settings;
+using StayEase.Application.Utility;
+using StayEase.Domain;
 using StayEase.Domain.DataTransferObjects.Property;
+using StayEase.Domain.Entities;
+using StayEase.Domain.Identity;
+using StayEase.Domain.Interfaces.Repositories;
 using StayEase.Domain.Interfaces.Services;
 
 namespace StayEase.Application.Services;
 
 public class PropertyService : IPropertyService
 {
-    public async Task<Responses> GetAllPropertiesAsync()
-    {
-        throw new NotImplementedException();
-    }
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
+        private readonly UserManager<AppUser> _userManager;
 
-    public async Task<Responses> GetPropertyByIdAsync(string propertyId)
-    {
-        throw new NotImplementedException();
-    }
+        public PropertyService(IUnitOfWork unitOfWork, UserManager<AppUser> userManager, IMapper mapper, IConfiguration configuration)
+        {
+            _unitOfWork = unitOfWork;
+            _userManager = userManager;
+            _mapper = mapper;
+            _configuration = configuration;
+        }
+        public async Task<Responses> CreatePropertyAsync(string? email, PropertyToCreateDTO propertyDTO)
+        {
+            var owner = await _userManager.FindByEmailAsync(email);
 
-    public async Task<Responses> CreatePropertyAsync(string? email, PropertyToCreateDTO propertyDTO)
-    {
-        throw new NotImplementedException();
-    }
+            var region = await _unitOfWork.Repository<Region, int>().GetByIdAsync(propertyDTO.Region.Id);
+            if (region == null)
+            {
+                var MappedRegion = new Region()
+                {
+                    Name = propertyDTO.Region.Name
+                };
 
-    public async Task<Responses> UpdatePropertyAsync(string propertyId, PropertyToUpdateDTO propertyDTO)
-    {
-        throw new NotImplementedException();
-    }
+                await _unitOfWork.Repository<Region, int>().AddAsync(MappedRegion);
+                var IsComplete = await _unitOfWork.CompleteAsync();
+                if (IsComplete <= 0)
+                {
+                    return await Responses.FailurResponse("Region is not valid data!", HttpStatusCode.InternalServerError);
+                }
+            }
 
-    public async Task<Responses> DeletePropertyAsync(string propertyId)
-    {
-        throw new NotImplementedException();
-    }
+            var country = await _unitOfWork.Repository<Country, int>().GetByIdAsync(propertyDTO.Country.Id);
+            if (country == null)
+            {
+                var MappedCountry = new Country()
+                {
+                    Name = propertyDTO.Country.Name,
+                    RegionId = propertyDTO.Region.Id,
+                };
+
+                await _unitOfWork.Repository<Country, int>().AddAsync(MappedCountry);
+                var IsComplete = await _unitOfWork.CompleteAsync();
+                if (IsComplete <= 0)
+                {
+                    return await Responses.FailurResponse("Country is not valid data!", HttpStatusCode.InternalServerError);
+                }
+            }
+
+            var location = await _unitOfWork.Repository<Location, int>().GetByIdAsync(propertyDTO.Location.Id);
+            if (location == null)
+            {
+                var MappedLocation = new Location()
+                {
+                    Name = propertyDTO.Location.Name,
+                    CountryId = propertyDTO.Country.Id
+                };
+
+                await _unitOfWork.Repository<Location, int>().AddAsync(MappedLocation);
+                var IsComplete = await _unitOfWork.CompleteAsync();
+                if (IsComplete <= 0)
+                {
+                    return await Responses.FailurResponse("Location is not valid data!", HttpStatusCode.InternalServerError);
+                }
+            }
+
+            string PropertyId = Guid.NewGuid().ToString();
+            var images = new List<Image>();
+            foreach (var img in propertyDTO.Images)
+            {
+                // upload image and take his url to assign it for object of images and add it in images list
+                var ImgName = await DocumentSettings.UploadFile(img, SD.Image, "Property");
+                var url = _configuration["BaseUrl"] + $"{ImgName}";
+                var newImage = new Image()
+                {
+                    PropertyId = PropertyId,
+                    Url = url
+                };
+                images.Add(newImage);
+            }
+
+            var roomServices = new List<RoomServicesToCreateDTO>();
+            foreach (var item in propertyDTO.RoomServices)
+            {
+                // map every object from string to room service 
+                var RS = new RoomServicesToCreateDTO()
+                {
+                    PropertyId = PropertyId,
+                    Description = item.Description,
+                };
+
+                roomServices.Add(RS);
+            }
+
+            var MappedRoomServices = _mapper.Map<ICollection<RoomServicesToCreateDTO>, ICollection<RoomService>>(roomServices);
+            var MappedProperty = new Property()
+            {
+                Id = PropertyId,
+                Name = propertyDTO.Name,
+                Description = propertyDTO.Description,
+                NightPrice = propertyDTO.NightPrice.Value,
+                PlaceType = propertyDTO.PlaceType,
+                Location = location,
+                Owner = owner,
+                //Images = images,
+                // Categories = categories,
+                //RoomServices = MappedRoomServices
+            };
+            await _unitOfWork.Repository<Property, string>().AddAsync(MappedProperty);
+            var Result = await _unitOfWork.CompleteAsync();
+            if (Result <= 0) return await Responses.FailurResponse(System.Net.HttpStatusCode.BadRequest);
+
+            await _unitOfWork.Repository<Image, int>().AddRangeAsync(images);
+            await _unitOfWork.CompleteAsync();
+            return await Responses.SuccessResponse("Property has been created successfuly!");
+        }
+    
+        public async Task<Responses> GetAllPropertiesAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Responses> GetPropertyByIdAsync(string propertyId)
+        {
+            throw new NotImplementedException();
+        }
+        
+
+        public async Task<Responses> UpdatePropertyAsync(string propertyId, PropertyToUpdateDTO propertyDTO)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Responses> DeletePropertyAsync(string propertyId)
+        {
+            throw new NotImplementedException();
+        }
 }
