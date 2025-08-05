@@ -1,0 +1,49 @@
+﻿using StayEase.Domain.Identity;
+using StayEase.Domain.Interfaces.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.Extensions.Configuration;
+using System.IdentityModel.Tokens.Jwt;
+
+namespace StayEase.Application.Services
+{
+    public class AuthService : IAuthService
+    {
+        private readonly IConfiguration _configuration;
+
+        public AuthService(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
+        public async Task<string> CreateTokenAsync(AppUser user, UserManager<AppUser> _userManager)
+        {
+            var userClaims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.NameIdentifier,user.Id),
+                new Claim(ClaimTypes.Name,user.FullName),
+                new Claim(ClaimTypes.Email,user.Email),
+            };
+
+            var Roles = await _userManager.GetRolesAsync(user);
+            foreach (var role in Roles)
+            {
+                userClaims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            var authKeyInByets = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Token:Key"]));
+            double expiryDays = double.TryParse(_configuration["Token:ExpiryDays"], out var days) ? days : 7;
+           
+            var JwtObject = new JwtSecurityToken(
+                issuer: _configuration["Token:Issuer"],
+                audience: _configuration["Token:Audience"],
+                claims: userClaims,
+                expires: DateTime.Now.AddDays(expiryDays),
+                signingCredentials: new SigningCredentials(authKeyInByets, SecurityAlgorithms.HmacSha256/*HmacSha256Signature*/)
+            );
+            return new JwtSecurityTokenHandler().WriteToken(JwtObject);
+        }
+    }
+}
