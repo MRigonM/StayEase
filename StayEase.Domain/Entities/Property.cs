@@ -1,0 +1,32 @@
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using StayEase.Domain.Identity;
+
+namespace StayEase.Domain.Entities
+{
+	public class Property : BaseEntity<string>
+	{
+		public string Name { get; set; } = string.Empty;
+		public string Description { get; set; } = string.Empty;
+		public decimal NightPrice { get; set; }
+		public float Rate { get; set; }
+		public string PlaceType { get; set; } = string.Empty;
+
+		[ForeignKey("Location")]
+		public int LocationId { get; set; }
+		public virtual Location Location { get; set; }
+
+		[ForeignKey("Owner")]
+		public string OwnerId { get; set; }
+		public virtual AppUser Owner { get; set; }
+
+		public virtual ICollection<Image> Images { get; set; } = new HashSet<Image>();
+
+        public virtual ICollection<PropertyCategory> PropertyCategories { get; set; } = new HashSet<PropertyCategory>();
+
+        public virtual ICollection<Review> Reviews { get; set; } = new HashSet<Review>();
+
+        public virtual ICollection<RoomService> RoomServices { get; set; } = new List<RoomService>();
+
+        public virtual ICollection<Booking> Bookings { get; set; } = new HashSet<Booking>();
+	}
+}
