@@ -1,6 +1,7 @@
 ﻿using StayEase.Domain.DataTransferObjects;
 using StayEase.Domain.Identity;
 using FluentValidation;
+using StayEase.Domain.DataTransferObjects.Identity;
 
 namespace StayEase.APIs.Validators
 {

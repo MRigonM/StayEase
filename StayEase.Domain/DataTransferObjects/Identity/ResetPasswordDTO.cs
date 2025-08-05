@@ -1,4 +1,4 @@
-﻿namespace StayEase.Domain.DataTransferObjects
+﻿namespace StayEase.Domain.DataTransferObjects.Identity
 {
     public class ResetPasswordDTO
     {

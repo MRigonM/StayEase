@@ -2,6 +2,7 @@
 using StayEase.Domain.Identity;
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
+using StayEase.Domain.DataTransferObjects.Identity;
 
 namespace StayEase.Application.Resolvers
 {

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using StayEase.Application.Resolvers;
 using StayEase.Domain.DataTransferObjects;
+using StayEase.Domain.DataTransferObjects.Identity;
 using StayEase.Domain.Identity;
 
 namespace StayEase.Application.Mappings;

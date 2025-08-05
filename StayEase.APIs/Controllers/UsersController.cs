@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using StayEase.Domain.DataTransferObjects.Identity;
 
 namespace StayEase.APIs.Controllers
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace StayEase.Domain.DataTransferObjects
+namespace StayEase.Domain.DataTransferObjects.Identity
 {
     public class UpdateUserDTO
     {

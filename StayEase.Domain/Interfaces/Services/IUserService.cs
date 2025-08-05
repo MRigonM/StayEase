@@ -1,5 +1,6 @@
 ﻿using StayEase.Domain;
 using StayEase.Domain.DataTransferObjects;
+using StayEase.Domain.DataTransferObjects.Identity;
 using StayEase.Domain.Identity;
 
 
