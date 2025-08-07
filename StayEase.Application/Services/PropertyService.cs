@@ -132,24 +132,70 @@ public class PropertyService : IPropertyService
             return await Responses.SuccessResponse("Property has been created successfuly!");
         }
     
-        public async Task<Responses> GetAllPropertiesAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<Responses> GetPropertyByIdAsync(string propertyId)
-        {
-            throw new NotImplementedException();
-        }
-        
-
-        public async Task<Responses> UpdatePropertyAsync(string propertyId, PropertyToUpdateDTO propertyDTO)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Responses> DeletePropertyAsync(string propertyId)
         {
-            throw new NotImplementedException();
+            var property = await _unitOfWork.Repository<Property, string>().GetByIdAsync(propertyId);
+            if (property == null) return await Responses.FailurResponse("There is no property with this id");
+            _unitOfWork.Repository<Property, string>().Remove(property);
+            var Result = await _unitOfWork.CompleteAsync();
+            if (Result <= 0) return await Responses.FailurResponse("Error has been occured while removing");
+            return await Responses.SuccessResponse("Property has been deleted successfully!");
+        }
+        public async Task<Responses> GetAllPropertiesAsync()
+        {
+            // there is a cycle when return the object
+            var properties = (await _unitOfWork.Repository<Property, string>().GetAllAsync()).ToList();
+            if (!properties.Any()) return await Responses.FailurResponse("There is no properties found", System.Net.HttpStatusCode.NotFound);
+            var MappedProperties = _mapper.Map<List<Property>, List< PropertyDTO>>(properties);
+
+            for(int i = 0; i < properties.Count(); i++)
+            {
+                var ImgUrls = new List<string>();
+                foreach(var img in properties[i].Images)
+                {
+                    ImgUrls.Add(img.Url);
+                }
+                MappedProperties[i].ImageUrls = ImgUrls;
+            }
+            return await Responses.SuccessResponse(MappedProperties);
+        }
+        public async Task<Responses> GetPropertyByIdAsync(string propertyId)
+        {
+            // there is a cycle when return the object
+            var property = await _unitOfWork.Repository<Property, string>().GetByIdAsync(propertyId);
+            if (property == null) return await Responses.FailurResponse("Property is not found!", System.Net.HttpStatusCode.NotFound);
+            var MappedProperty = _mapper.Map<Property, PropertyDTO>(property);
+            var imagesUrl = new List<string>();
+            foreach(var img in property.Images)
+            {
+                imagesUrl.Add(img.Url);
+            }
+            MappedProperty.ImageUrls = imagesUrl;
+            return await Responses.SuccessResponse(MappedProperty);
+        }
+        public async Task<Responses> UpdatePropertyAsync(string propertyId, PropertyToUpdateDTO propertyDTO)
+        {
+            var property = await _unitOfWork.Repository<Property, string>().GetByIdAsync(propertyId);
+            if (property == null) return await Responses.FailurResponse("Property is not found!", System.Net.HttpStatusCode.NotFound);
+            // if the item is null shouldn't change anything.
+            if(propertyDTO.Name is not null)
+            property.Name = propertyDTO.Name;
+            if (propertyDTO.Description is not null)
+            property.Description = propertyDTO.Description;
+            if(propertyDTO.NightPrice > 0)
+            property.NightPrice = propertyDTO.NightPrice;
+            if(propertyDTO.PlaceType is not null)
+            property.PlaceType = propertyDTO.PlaceType;
+            if(propertyDTO.Location is not null)
+            property.Location.Id = propertyDTO.Location.Id;
+            if(propertyDTO.Owner is not null)
+            property.Owner = await _userManager.FindByEmailAsync(propertyDTO.Owner.Email);
+            //property.Images = propertyDTO.Images;
+            //property.PropertyCategories = propertyDTO.Categories;
+
+            _unitOfWork.Repository<Property, string>().Update(property);
+            var Result = await _unitOfWork.CompleteAsync();
+            if (Result <= 0) return await Responses.FailurResponse(System.Net.HttpStatusCode.InternalServerError);
+            return await Responses.SuccessResponse("Property has been updated successfully!");
         }
 }
