@@ -17,6 +17,9 @@ public class MappingProfiles : Profile
             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.UserName))
             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
             .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
+            .ForMember(dest => dest.Bookings, opt => opt.MapFrom(src => src.Bookings))
+            .ForMember(dest => dest.Properties, opt => opt.MapFrom(src => src.Properties))
+            .ForMember(dest => dest.Reviews, opt => opt.MapFrom(src => src.Reviews))
             .ForMember(dest => dest.profileImage, opt => opt.MapFrom<UserResolver>());
         
         CreateMap<AppUser, OwnerDto>()

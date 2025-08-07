@@ -8,6 +8,9 @@
         public string Email { get; set; }
         public string Username { get; set; }
         public string PhoneNumber { get; set; }
+        public IEnumerable<BookingDto> Bookings { get; set; }
+        public IEnumerable<PropertyUserDto> Properties { get; set; }
+        public IEnumerable<ReviewDto> Reviews { get; set; }
         public string? profileImage { get; set; }
     }
     public class BookingDto
