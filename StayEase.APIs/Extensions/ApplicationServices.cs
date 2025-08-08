@@ -41,6 +41,7 @@ public static class ApplicationServices
             Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); 
             Services.AddMemoryCache();
             Services.AddScoped<UserResolver>();
+            Services.AddScoped<IPropertyService,PropertyService>();
             Services.AddScoped<IAuthService, AuthService>();
             Services.AddScoped<IUserService, UserService>();
             Services.AddHttpContextAccessor();
