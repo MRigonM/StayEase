@@ -14,8 +14,7 @@ namespace StayEase.APIs.Validators
 
             // Description validation: required and at least 10 characters
             RuleFor(x => x.Description)
-                .NotEmpty().WithMessage("Description is required.")
-                .MinimumLength(10).WithMessage("Description must be at least 10 characters long.");
+                .NotEmpty().WithMessage("Description is required.");
 
             // NightPrice validation: must be greater than 0
             RuleFor(x => x.NightPrice)

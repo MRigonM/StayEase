@@ -29,6 +29,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="wwwroot\Files\Image\Property\" />
       <Folder Include="wwwroot\Files\Image\UserProfile\" />
     </ItemGroup>
 
