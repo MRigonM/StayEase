@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http;
 
-namespace StayEase.Domain.DataTransferObjects
+namespace StayEase.Domain.DataTransferObjects.Identity
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Role

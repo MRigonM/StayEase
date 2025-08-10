@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 using StayEase.APIs.Validators;
+using StayEase.Domain.Interfaces.Repositories;
 using StayEase.Infrastructure.Data;
+using StayEase.Infrastructure.Repositories;
 
 namespace StayEase.APIs.Extensions;
 
@@ -41,8 +43,10 @@ public static class ApplicationServices
             Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); 
             Services.AddMemoryCache();
             Services.AddScoped<UserResolver>();
+            Services.AddScoped<IPropertyService,PropertyService>();
             Services.AddScoped<IAuthService, AuthService>();
             Services.AddScoped<IUserService, UserService>();
+            Services.AddScoped<IUnitOfWork, UnitOfWork>();
             Services.AddHttpContextAccessor();
             
 

@@ -31,9 +31,4 @@
       <_ContentIncludedByDefault Remove="wwwroot\exampleJsInterop.js" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Entities\" />
-      <Folder Include="Interfaces\" />
-    </ItemGroup>
-
 </Project>

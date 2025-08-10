@@ -9,6 +9,7 @@ using AutoMapper;
 using Microsoft.Extensions.Caching.Memory;
 using StayEase.Application.Settings;
 using StayEase.Application.Utility;
+using StayEase.Domain.DataTransferObjects.Identity;
 
 
 namespace StayEase.Application.Services

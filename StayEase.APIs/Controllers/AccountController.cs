@@ -3,6 +3,7 @@ using StayEase.Domain.DataTransferObjects;
 using StayEase.Domain.Interfaces.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using StayEase.Domain.DataTransferObjects.Identity;
 
 namespace StayEase.APIs.Controllers
 {

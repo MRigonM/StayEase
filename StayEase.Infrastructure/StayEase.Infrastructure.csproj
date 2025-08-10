@@ -21,12 +21,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Migrations\" />
-      <Folder Include="Repositories\" />
-      <Folder Include="Specifications\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\StayEase.Domain\StayEase.Domain.csproj" />
     </ItemGroup>
 
