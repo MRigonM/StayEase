@@ -1,0 +1,127 @@
+﻿using Microsoft.Extensions.Configuration;
+using StayEase.Domain;
+using StayEase.Domain.DataTransferObjects;
+using StayEase.Domain.Entities;
+using StayEase.Domain.Interfaces.Repositories;
+using StayEase.Domain.Interfaces.Services;
+using Stripe;
+using Stripe.Checkout;
+
+namespace StayEase.Application.Services
+{
+    public class PaymentService : IPaymentService
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IConfiguration _configuration;
+
+        public PaymentService(IUnitOfWork unitOfWork, IConfiguration configuration)
+        {
+            _unitOfWork = unitOfWork;
+            _configuration = configuration;
+        }
+
+        public async Task<Responses> CreatePaymentIntentAsync(string currency, int bookingId)
+        {
+            var booking = await _unitOfWork.Repository<Booking, int>().GetByIdAsync(bookingId);
+            if (booking is null) return await Responses.FailurResponse("there is no booking with this id!");
+
+            var Service = new PaymentIntentService();
+            PaymentIntent paymentIntent;
+
+            if (string.IsNullOrEmpty(booking.PaymentIntentId))
+            {
+                var Options = new PaymentIntentCreateOptions()
+                {
+                    Amount = (long)(booking.TotalPrice * 100),
+                    Currency = "eur",
+                    PaymentMethodTypes = new List<string>() { "card" }
+                };
+
+                paymentIntent = await Service.CreateAsync(Options);
+                booking.PaymentIntentId = paymentIntent.Id;
+            }
+            else
+            {
+                var Options = new PaymentIntentUpdateOptions()
+                {
+                    Amount = (long)(booking.TotalPrice * 100)
+                };
+
+                paymentIntent = await Service.UpdateAsync(booking.PaymentIntentId, Options);
+
+                booking.PaymentIntentId = paymentIntent.Id;
+            }
+
+
+            _unitOfWork.Repository<Booking, int>().Update(booking);
+
+            var Result = await _unitOfWork.CompleteAsync();
+
+            if (Result <= 0) return await Responses.FailurResponse("Error has been occured while updating the paying status!");
+
+            var customer = new CustomerDTO()
+            {
+                PaymentIntentId = paymentIntent.Id,
+                ClientSecret = paymentIntent.ClientSecret
+            };
+            return await Responses.SuccessResponse(customer);
+        }
+        
+        public async Task<Responses> CreateCheckoutSessioinAsync(int bookingId)
+        {
+
+            var booking = await _unitOfWork.Repository<Booking, int>().GetByIdAsync(bookingId);
+            if(booking is null) return await Responses.FailurResponse("booking is not found", System.Net.HttpStatusCode.NotFound);
+            string BaseUrl = _configuration["BaseUrl"];
+            var options = new SessionCreateOptions
+            {
+                PaymentMethodTypes = new List<string>
+                {
+                    "card",
+                },
+
+                LineItems = new List<SessionLineItemOptions>
+                {
+                    new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            UnitAmount =(long) booking.TotalPrice * 100, // amount in cents (e.g. 20.00 EURO)
+                            Currency = "eur",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = booking.Property.Name,
+                            },
+                        },
+                        Quantity = 1,
+                    },
+                },
+
+                Mode = "payment",
+                SuccessUrl = BaseUrl + $"api/payment/success?bookingId={booking.Id}",
+                CancelUrl =  BaseUrl + $"api/payment/cancel?bookingId={booking.Id}",
+            };
+
+            var service = new SessionService();
+            Session session = service.Create(options);
+
+            // Return the URL to the frontend or redirect user
+            return await Responses.SuccessResponse(session.Url);
+        }
+
+        public async Task<Responses> RefundPaymentAsync(int bookingId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Responses> PaymentSuccessAsync(int bookingId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Responses> PaymentCancelAsync(int bookingId)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
