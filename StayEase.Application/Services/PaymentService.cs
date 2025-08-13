@@ -108,20 +108,34 @@ namespace StayEase.Application.Services
             // Return the URL to the frontend or redirect user
             return await Responses.SuccessResponse(session.Url);
         }
-
-        public async Task<Responses> RefundPaymentAsync(int bookingId)
+        
+        public async Task<Responses> PaymentCancelAsync(int bookingId)
         {
-            throw new NotImplementedException();
+            var booking = await _unitOfWork.Repository<Booking, int>().GetByIdAsync(bookingId);
+            if (booking is null) return await Responses.FailurResponse("booking is not found", System.Net.HttpStatusCode.NotFound);
+
+            booking.Status = BookingStatus.Canceled;
+            _unitOfWork.Repository<Booking, int>().Update(booking);
+            var Result = await _unitOfWork.CompleteAsync();
+            if (Result <= 0) return await Responses.FailurResponse("Error has been occured while updating", System.Net.HttpStatusCode.InternalServerError);
+            return await Responses.SuccessResponse("Payment was canceled by the user, The owner will Take an action to refund your money if needed!");
         }
 
         public async Task<Responses> PaymentSuccessAsync(int bookingId)
         {
-            throw new NotImplementedException();
-        }
+            var booking = await _unitOfWork.Repository<Booking, int>().GetByIdAsync(bookingId);
+            if (booking is null) return await Responses.FailurResponse("booking is not found", System.Net.HttpStatusCode.NotFound);
 
-        public async Task<Responses> PaymentCancelAsync(int bookingId)
-        {
-            throw new NotImplementedException();
+            booking.Status = BookingStatus.PaymentReceived;
+            _unitOfWork.Repository<Booking, int>().Update(booking);
+            var Result = await _unitOfWork.CompleteAsync();
+            if(Result <= 0) return await Responses.FailurResponse("Error has been occured while updating", System.Net.HttpStatusCode.InternalServerError);
+            return await Responses.SuccessResponse("Payment was successful");
         }
+        
+        public async Task<Responses> RefundPaymentAsync(int bookingId)
+                {
+                    throw new NotImplementedException();
+                }
     }
 }
