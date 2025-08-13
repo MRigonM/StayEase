@@ -61,22 +61,51 @@ namespace StayEase.Application.Services
 
         public async Task<Responses> DeleteBookingById(int bookingId)
         {
-            throw new NotImplementedException();
+            var booking = await _unitOfWork.Repository<Booking, int>().GetByIdAsync(bookingId);
+            if (booking == null) return await Responses.FailurResponse("this book is not found or there is error!");
+            // implement refund money if the date not passed yet
+            _unitOfWork.Repository<Booking, int>().Remove(booking);
+            var Result = await _unitOfWork.CompleteAsync();
+            if (Result <= 0) return await Responses.FailurResponse("Error has been occured while removing");
+            return await Responses.SuccessResponse("Booking has been deleted successfully!");
         }
 
         public async Task<Responses> GetBookingById(int bookingId)
         {
-            throw new NotImplementedException();
+            var booking = await _unitOfWork.Repository<Booking, int>().GetByIdAsync(bookingId);
+            if (booking == null) return await Responses.FailurResponse("this book is not found or there is error!");
+            var MappedBooking = _mapper.Map<Booking, BookingDto>(booking);
+            return await Responses.SuccessResponse(MappedBooking);
         }
-        
+
         public async Task<Responses> GetBookingsByUserId(string email)
         {
-            throw new NotImplementedException();
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user is null) return await Responses.FailurResponse("please login to proccess!");
+            var spec = new BookingSpecifications(user.Id);
+            var bookings = await _unitOfWork.Repository<Booking, int>().GetAllWithSpecAsync(spec);
+            if(bookings is null) return await Responses.FailurResponse("There is no booking for you!");
+            var MappedBookings = _mapper.Map<IReadOnlyList<Booking>, IReadOnlyList<BookingDto>>(bookings);
+            return await Responses.SuccessResponse(MappedBookings);
         }
-        
-        public async Task<Responses> UpdateBookingByPropertyId(int bookingId, BookingToUpdateDTO bookDTO)
+
+        public async Task<Responses> UpdateBookingByPropertyId(int bookingId, BookingToUpdateDTO bookDto)
         {
-            throw new NotImplementedException();
+            var booking = await _unitOfWork.Repository<Booking, int>().GetByIdAsync(bookingId);
+            if (booking is null) return await Responses.FailurResponse("There is no bookgin with this id");
+
+            bool isAvailable = await _unitOfWork.Repository<Booking, int>().CheckAvailabilityAsync(b => b.PropertyId == booking.PropertyId && b.Id != bookingId, booking.StartDate, booking.EndDate);
+            if (!isAvailable) return await Responses.FailurResponse("please check another date, property isn't availabe at this time!");
+
+            var totalPrice = (bookDto.EndDate.Day - bookDto.StartDate.Day) * booking.Property.NightPrice;
+            booking.StartDate = bookDto.StartDate;
+            booking.EndDate = bookDto.EndDate;
+            booking.TotalPrice = totalPrice;
+
+            _unitOfWork.Repository<Booking, int>().Update(booking);
+            var Result = await _unitOfWork.CompleteAsync();
+            if (Result <= 0) return await Responses.FailurResponse("Error has been occured while updating the booking!");
+            return await Responses.SuccessResponse("Booking has been updated successfully!");
         }
     }
 }
