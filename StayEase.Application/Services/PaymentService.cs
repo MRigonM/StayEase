@@ -134,8 +134,48 @@ namespace StayEase.Application.Services
         }
         
         public async Task<Responses> RefundPaymentAsync(int bookingId)
+        {
+            var booking = await _unitOfWork.Repository<Booking, int>().GetByIdAsync(bookingId);
+
+            if (booking is null)
+                return await Responses.FailurResponse("Booking not found!", System.Net.HttpStatusCode.NotFound);
+
+            if (string.IsNullOrEmpty(booking.PaymentIntentId))
+                return await Responses.FailurResponse("No Payment Intent ID associated with this booking!", System.Net.HttpStatusCode.BadRequest);
+
+            try
+            {
+                // Create refund options
+                var refundOptions = new RefundCreateOptions
                 {
-                    throw new NotImplementedException();
-                }
+                    PaymentIntent = booking.PaymentIntentId,
+                    Amount = (long)(booking.TotalPrice * 100), // Refund the full amount in cents
+                };
+
+                // Initiate the refund process
+                var refundService = new RefundService();
+                Refund refund = await refundService.CreateAsync(refundOptions);
+
+                booking.Status = BookingStatus.Canceled; 
+                _unitOfWork.Repository<Booking, int>().Update(booking);
+
+                var result = await _unitOfWork.CompleteAsync();
+
+                if (result <= 0)
+                    return await Responses.FailurResponse("Failed to update booking status after refund.", System.Net.HttpStatusCode.InternalServerError);
+
+                return await Responses.SuccessResponse(refund);
+            }
+            catch (StripeException ex)
+            {
+                // Handle Stripe exceptions
+                return await Responses.FailurResponse($"Stripe error: {ex.Message}", System.Net.HttpStatusCode.BadRequest);
+            }
+            catch (Exception ex)
+            {
+                // Handle general exceptions
+                return await Responses.FailurResponse($"An error occurred: {ex.Message}", System.Net.HttpStatusCode.InternalServerError);
+            }
+        }
     }
 }
