@@ -38,5 +38,39 @@ namespace StayEase.APIs.Controllers
 
             return Ok(await _bookService.CreateBookingByPropertyId(email, bookDTO));
         }
+
+        [HttpPut("CancelBooking")]
+        public async Task<ActionResult<Responses>> CancelBooking([FromQuery] int bookingId)
+        {
+            var Response = await _paymentService.PaymentCancelAsync(bookingId);
+            return Ok(Response);
+        }
+         
+         [HttpDelete("DeleteBooking")]
+        public async Task<ActionResult<Responses>> DeleteBooking([FromQuery] int bookingId)
+        {
+            var Response = await _bookService.DeleteBookingById(bookingId);
+            return Ok(Response);
+        }
+
+
+        [HttpGet("GetBooking")]
+        public async Task<ActionResult<Responses>> GetBookingById([FromQuery] int bookingId)
+        {
+            return Ok(await _bookService.GetBookingById(bookingId));
+        }
+
+
+        [HttpGet("GetBookingsByUser")]
+        public async Task<ActionResult<Responses>> GetBookingsByUserId([FromQuery] string userId)
+        {
+            return Ok(await _bookService.GetBookingsByUserId(userId));
+        }
+
+        [HttpPut("UpdateBookingById")]
+        public async Task<ActionResult<Responses>> UpdateBookingByPropertyId(int bookingId, BookingToUpdateDTO bookDto)
+        {
+            return Ok(await _bookService.UpdateBookingByPropertyId(bookingId, bookDto));
+        }
     }
 }
