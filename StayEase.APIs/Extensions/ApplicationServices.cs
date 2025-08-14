@@ -22,7 +22,7 @@ public static class ApplicationServices
         {
             Services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                options.UseMySql(Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8,0,0)));
                 options.UseLazyLoadingProxies();
             });
 
