@@ -12,7 +12,7 @@ using StayEase.Infrastructure.Data;
 namespace StayEase.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250810184728_InitialMigration")]
+    [Migration("20250813232205_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -188,6 +188,9 @@ namespace StayEase.Infrastructure.Migrations
 
                     b.Property<DateTimeOffset>("StartDate")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");

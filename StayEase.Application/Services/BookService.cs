@@ -78,9 +78,9 @@ namespace StayEase.Application.Services
             return await Responses.SuccessResponse(MappedBooking);
         }
 
-        public async Task<Responses> GetBookingsByUserId(string email)
+        public async Task<Responses> GetBookingsByUserId(string id)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByIdAsync(id);
             if (user is null) return await Responses.FailurResponse("please login to proccess!");
             var spec = new BookingSpecifications(user.Id);
             var bookings = await _unitOfWork.Repository<Booking, int>().GetAllWithSpecAsync(spec);

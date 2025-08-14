@@ -5,7 +5,7 @@
         Task<Responses> CreatePaymentIntentAsync(string currency, int bookingId);
         Task<Responses> CreateCheckoutSessioinAsync(int bookingId);
         Task<Responses> RefundPaymentAsync(int bookingId);
-        Task<Responses> PaymentSuccessAsync(int bookingId);
+        Task<Responses> PaymentSuccessAsync(int bookingId, string sessionId = null);
         Task<Responses> PaymentCancelAsync(int bookingId);
     }
 }

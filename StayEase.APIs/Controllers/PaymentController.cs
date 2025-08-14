@@ -16,16 +16,17 @@ namespace StayEase.APIs.Controllers
         [HttpPost("create-payment-intent")]
         public async Task<ActionResult> CreatePaymentIntent([FromQuery] int bookId)
         {
-            var paymentIntent = await _paymentService.CreatePaymentIntentAsync("usd", bookId);
+            var paymentIntent = await _paymentService.CreatePaymentIntentAsync("eur", bookId);
             return Ok(paymentIntent);
         }
         // stripe tests
         [HttpGet("success")]
-        public async Task<ActionResult<Responses>> PaymentSuccess([FromQuery] int bookingId)
+        public async Task<ActionResult<Responses>> PaymentSuccess([FromQuery] int bookingId, [FromQuery(Name = "session_id")] string sessionId = null)
         {
-            var Response = await _paymentService.PaymentSuccessAsync(bookingId);
-            return Ok(Response);
+            var response = await _paymentService.PaymentSuccessAsync(bookingId, sessionId);
+            return Ok(response);
         }
+
 
         [HttpGet("cancel")]
         public  async Task<ActionResult<Responses>> PaymentCancel([FromQuery] int bookingId)

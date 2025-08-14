@@ -69,24 +69,20 @@ namespace StayEase.Application.Services
         
         public async Task<Responses> CreateCheckoutSessioinAsync(int bookingId)
         {
-
             var booking = await _unitOfWork.Repository<Booking, int>().GetByIdAsync(bookingId);
-            if(booking is null) return await Responses.FailurResponse("booking is not found", System.Net.HttpStatusCode.NotFound);
+            if (booking is null) return await Responses.FailurResponse("booking is not found", System.Net.HttpStatusCode.NotFound);
+
             string BaseUrl = _configuration["BaseUrl"];
             var options = new SessionCreateOptions
             {
-                PaymentMethodTypes = new List<string>
-                {
-                    "card",
-                },
-
+                PaymentMethodTypes = new List<string> { "card" },
                 LineItems = new List<SessionLineItemOptions>
                 {
                     new SessionLineItemOptions
                     {
                         PriceData = new SessionLineItemPriceDataOptions
                         {
-                            UnitAmount =(long) booking.TotalPrice * 100, // amount in cents (e.g. 20.00 EURO)
+                            UnitAmount = (long)(booking.TotalPrice * 100),
                             Currency = "eur",
                             ProductData = new SessionLineItemPriceDataProductDataOptions
                             {
@@ -96,18 +92,19 @@ namespace StayEase.Application.Services
                         Quantity = 1,
                     },
                 },
-
                 Mode = "payment",
-                SuccessUrl = BaseUrl + $"api/payment/success?bookingId={booking.Id}",
-                CancelUrl =  BaseUrl + $"api/payment/cancel?bookingId={booking.Id}",
+
+                // IMPORTANT: include the session id placeholder so Stripe will append session_id to the redirect
+                SuccessUrl = BaseUrl + $"api/payment/success?bookingId={booking.Id}&session_id={{CHECKOUT_SESSION_ID}}",
+                CancelUrl  = BaseUrl + $"api/payment/cancel?bookingId={booking.Id}",
             };
 
             var service = new SessionService();
-            Session session = service.Create(options);
+            Session session = await service.CreateAsync(options);
 
-            // Return the URL to the frontend or redirect user
             return await Responses.SuccessResponse(session.Url);
         }
+
         
         public async Task<Responses> PaymentCancelAsync(int bookingId)
         {
@@ -121,17 +118,66 @@ namespace StayEase.Application.Services
             return await Responses.SuccessResponse("Payment was canceled by the user, The owner will Take an action to refund your money if needed!");
         }
 
-        public async Task<Responses> PaymentSuccessAsync(int bookingId)
-        {
-            var booking = await _unitOfWork.Repository<Booking, int>().GetByIdAsync(bookingId);
-            if (booking is null) return await Responses.FailurResponse("booking is not found", System.Net.HttpStatusCode.NotFound);
+        public async Task<Responses> PaymentSuccessAsync(int bookingId, string sessionId = null)
+            {
+                var booking = await _unitOfWork.Repository<Booking, int>().GetByIdAsync(bookingId);
+                if (booking is null) return await Responses.FailurResponse("booking is not found", System.Net.HttpStatusCode.NotFound);
 
-            booking.Status = BookingStatus.PaymentReceived;
-            _unitOfWork.Repository<Booking, int>().Update(booking);
-            var Result = await _unitOfWork.CompleteAsync();
-            if(Result <= 0) return await Responses.FailurResponse("Error has been occured while updating", System.Net.HttpStatusCode.InternalServerError);
-            return await Responses.SuccessResponse("Payment was successful");
-        }
+                // If sessionId was provided (from Checkout redirect), fetch session and save PaymentIntentId
+                if (!string.IsNullOrEmpty(sessionId))
+                {
+                    var sessionService = new SessionService();
+                    Session session;
+                    try
+                    {
+                        session = await sessionService.GetAsync(sessionId);
+                    }
+                    catch (StripeException)
+                    {
+                        return await Responses.FailurResponse("Stripe session not found.", System.Net.HttpStatusCode.BadRequest);
+                    }
+
+                    // session.PaymentIntentId will contain the id of the PaymentIntent created by Checkout
+                    if (!string.IsNullOrEmpty(session.PaymentIntentId))
+                    {
+                        booking.PaymentIntentId = session.PaymentIntentId;
+                        _unitOfWork.Repository<Booking, int>().Update(booking);
+                        var saveResult = await _unitOfWork.CompleteAsync();
+                        if (saveResult <= 0)
+                            return await Responses.FailurResponse("Failed to save PaymentIntentId to booking.", System.Net.HttpStatusCode.InternalServerError);
+                    }
+                    else
+                    {
+                        // No PaymentIntent on the session — maybe payment not completed
+                        return await Responses.FailurResponse("Checkout session has no PaymentIntent yet.", System.Net.HttpStatusCode.BadRequest);
+                    }
+                }
+
+                // Optional: verify PaymentIntent status is succeeded before marking as paid
+                if (!string.IsNullOrEmpty(booking.PaymentIntentId))
+                {
+                    var paymentIntentService = new PaymentIntentService();
+                    var paymentIntent = await paymentIntentService.GetAsync(booking.PaymentIntentId);
+
+                    if (paymentIntent == null || paymentIntent.Status != "succeeded")
+                    {
+                        return await Responses.FailurResponse("Payment not completed yet.", System.Net.HttpStatusCode.BadRequest);
+                    }
+                }
+                else
+                {
+                    return await Responses.FailurResponse("No PaymentIntentId associated with booking.", System.Net.HttpStatusCode.BadRequest);
+                }
+
+                // Update booking status
+                booking.Status = BookingStatus.PaymentReceived;
+                _unitOfWork.Repository<Booking, int>().Update(booking);
+                var result = await _unitOfWork.CompleteAsync();
+                if (result <= 0) return await Responses.FailurResponse("Error has been occured while updating", System.Net.HttpStatusCode.InternalServerError);
+
+                return await Responses.SuccessResponse("Payment was successful");
+            }
+
         
         public async Task<Responses> RefundPaymentAsync(int bookingId)
         {
@@ -145,20 +191,26 @@ namespace StayEase.Application.Services
 
             try
             {
-                // Create refund options
+                var paymentIntentService = new PaymentIntentService();
+                var paymentIntent = await paymentIntentService.GetAsync(booking.PaymentIntentId);
+
+                if (paymentIntent == null)
+                    return await Responses.FailurResponse("PaymentIntent not found.", System.Net.HttpStatusCode.BadRequest);
+
+                if (string.IsNullOrEmpty(paymentIntent.LatestChargeId))
+                    return await Responses.FailurResponse("No charge found to refund.", System.Net.HttpStatusCode.BadRequest);
+
+                var refundService = new RefundService();
                 var refundOptions = new RefundCreateOptions
                 {
-                    PaymentIntent = booking.PaymentIntentId,
-                    Amount = (long)(booking.TotalPrice * 100), // Refund the full amount in cents
+                    Charge = paymentIntent.LatestChargeId,
+                    Amount = (long)(booking.TotalPrice * 100) // Full refund
                 };
 
-                // Initiate the refund process
-                var refundService = new RefundService();
-                Refund refund = await refundService.CreateAsync(refundOptions);
+                var refund = await refundService.CreateAsync(refundOptions);
 
-                booking.Status = BookingStatus.Canceled; 
+                booking.Status = BookingStatus.Canceled;
                 _unitOfWork.Repository<Booking, int>().Update(booking);
-
                 var result = await _unitOfWork.CompleteAsync();
 
                 if (result <= 0)
@@ -168,14 +220,14 @@ namespace StayEase.Application.Services
             }
             catch (StripeException ex)
             {
-                // Handle Stripe exceptions
                 return await Responses.FailurResponse($"Stripe error: {ex.Message}", System.Net.HttpStatusCode.BadRequest);
             }
             catch (Exception ex)
             {
-                // Handle general exceptions
                 return await Responses.FailurResponse($"An error occurred: {ex.Message}", System.Net.HttpStatusCode.InternalServerError);
             }
         }
+
+
     }
 }
