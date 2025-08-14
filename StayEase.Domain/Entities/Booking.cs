@@ -12,6 +12,7 @@ namespace StayEase.Domain.Entities
 		public string PaymentMethod { get; set; } = string.Empty;
 		public DateTimeOffset PaymentDate { get; set; }
 		public string? PaymentIntentId { get; set; }
+		public BookingStatus Status { get; set; } = BookingStatus.Pending;
 
         [ForeignKey("Property")]
         public string PropertyId { get; set; }

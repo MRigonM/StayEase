@@ -29,10 +29,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Models\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\StayEase.Domain\StayEase.Domain.csproj" />
       <ProjectReference Include="..\StayEase.Infrastructure\StayEase.Infrastructure.csproj" />
     </ItemGroup>

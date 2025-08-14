@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 using StayEase.APIs.Validators;
+using StayEase.Application.Models;
 using StayEase.Domain.Interfaces.Repositories;
 using StayEase.Infrastructure.Data;
 using StayEase.Infrastructure.Repositories;
+using Stripe;
 
 namespace StayEase.APIs.Extensions;
 
@@ -47,8 +49,15 @@ public static class ApplicationServices
             Services.AddScoped<IAuthService, AuthService>();
             Services.AddScoped<IUserService, UserService>();
             Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            Services.AddScoped<IBookService, BookService>();
             Services.AddHttpContextAccessor();
             
+            #region Payment configuration
+            Services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
+            StripeConfiguration.ApiKey = Configuration["StripeKeys:SecretKey"];
+
+            Services.AddScoped<IPaymentService, PaymentService>();
+            #endregion
 
             Services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             Services.AddTransient<IMailService, MailService>();
