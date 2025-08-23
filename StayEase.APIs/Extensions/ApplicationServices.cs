@@ -50,6 +50,7 @@ public static class ApplicationServices
             Services.AddScoped<IUserService, UserService>();
             Services.AddScoped<IUnitOfWork, UnitOfWork>();
             Services.AddScoped<IBookService, BookService>();
+            Services.AddScoped<IReviewService, ReviewServices>();
             Services.AddHttpContextAccessor();
             
             #region Payment configuration
