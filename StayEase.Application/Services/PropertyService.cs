@@ -119,9 +119,6 @@ public class PropertyService : IPropertyService
                 PlaceType = propertyDTO.PlaceType,
                 Location = location,
                 Owner = owner,
-                //Images = images,
-                // Categories = categories,
-                //RoomServices = MappedRoomServices
             };
             await _unitOfWork.Repository<Property, string>().AddAsync(MappedProperty);
             var Result = await _unitOfWork.CompleteAsync();
