@@ -44,7 +44,7 @@ namespace StayEase.APIs.Controllers
             var validate = await _registerValidator.ValidateAsync(userDto);
             if (!validate.IsValid)
             {
-                return await Responses.FailurResponse(validate.Errors.ToString());
+                return await Responses.FailurResponse(validate.Errors);
             }
             return Ok(await _userService.Register(userDto));
         }
