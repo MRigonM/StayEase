@@ -39,17 +39,18 @@ var app = builder.Build();
 
 await ExtensionMethods.ApplyMigrations(app);
 
-// Swagger
-app.UseSwagger();
-app.UseSwaggerUI();
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseStaticFiles();
+app.UseHttpsRedirection();
 
-// ⚠️ RENDITJA E SAKTË
-app.UseRouting();          // 1) routing
-app.UseCors(corsPolicy);   // 2) CORS KËTU → kap preflight OPTIONS
-app.UseAuthentication();   // 3) auth
-app.UseAuthorization();    // 4) authorization
+app.UseRouting();          
+app.UseCors(corsPolicy);   
+app.UseAuthentication();   
+app.UseAuthorization();    
 
 app.MapControllers();
 
