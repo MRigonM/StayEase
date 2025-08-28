@@ -16,24 +16,30 @@ const ConfirmEmail = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSubmitting(true);
 
     try {
-      setSubmitting(true);
       const resp = await axios.post(
         `https://localhost:5000/api/Account/EmailConfirmation?email=${encodeURIComponent(
           email
         )}&code=${encodeURIComponent(code)}`
       );
 
-      if (resp.data?.succeeded) {
-        // nëse backend kthen succeeded
-        navigate("/logIn");
+      console.log("Confirmation response:", resp.data);
+
+      // ✅ your backend puts success info in isSuccess
+      if (resp.data?.isSuccess) {
+        navigate("/login"); // make sure your route casing matches
       } else {
-        setError(resp.data?.message || "Confirmation failed");
+        setError(resp.data?.message || resp.data?.data || "Confirmation failed");
       }
     } catch (err) {
-      console.error("Email confirmation error:", err.response);
-      setError(err.response?.data?.message || "Error confirming email");
+      console.error("Email confirmation error:", err);
+      setError(
+          err.response?.data?.message ||
+          err.response?.data ||
+          "Error confirming email"
+      );
     } finally {
       setSubmitting(false);
     }
