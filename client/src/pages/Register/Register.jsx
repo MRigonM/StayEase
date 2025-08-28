@@ -96,7 +96,7 @@ const Register = () => {
     try {
       setSubmitting(true);
       // IMPORTANT: do NOT set Content-Type header; let axios set multipart boundary automatically
-      const resp = await axios.post('http://localhost:5000/api/Account/Register', fd, {
+      const resp = await axios.post('https://localhost:5000/api/Account/Register', fd, {
         withCredentials: true,
       });
 
@@ -141,13 +141,13 @@ const Register = () => {
 
         <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-            <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
+            <h2 className="mt-3 text-center text-2xl font-bold tracking-tight text-gray-900">
               Create your account
             </h2>
           </div>
 
           <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            <form className="space-y-6" onSubmit={handleSubmit}>
+            <form className="space-y-3" onSubmit={handleSubmit}>
               <div>
                 <label htmlFor="firstName" className="block text-sm font-medium text-gray-900">
                   First Name
@@ -338,7 +338,7 @@ const Register = () => {
               </div>
             </form>
 
-            <p className="mt-10 text-center text-sm text-gray-500">
+            <p className="mt-8 text-center text-sm text-gray-500">
               Already have an account?{' '}
               <Link to="/logIn" className="font-semibold text-logoColor hover:opacity-90">
                 Sign in

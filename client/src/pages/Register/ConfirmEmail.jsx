@@ -20,7 +20,7 @@ const ConfirmEmail = () => {
     try {
       setSubmitting(true);
       const resp = await axios.post(
-        `http://localhost:5000/api/Account/EmailConfirmation?email=${encodeURIComponent(
+        `https://localhost:5000/api/Account/EmailConfirmation?email=${encodeURIComponent(
           email
         )}&code=${encodeURIComponent(code)}`
       );

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { setTokens } from './TokenService';
 import api from './AxiosInstance';
 
-const API_URL = 'http://localhost:5000/api/';
+const API_URL = 'https://localhost:5000/api/';
 
 export const loginUser = async (formData) => {
   try {
