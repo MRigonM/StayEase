@@ -2,11 +2,11 @@ import axios from 'axios';
 import { setTokens } from './TokenService';
 import api from './AxiosInstance';
 
-const API_URL = 'http://localhost:2001/api/Auth';
+const API_URL = 'http://localhost:5000/api/';
 
 export const loginUser = async (formData) => {
   try {
-    const response = await api.post(`${API_URL}/login`, formData);
+    const response = await api.post(`${API_URL}Account/Login`, formData);
     const { accessToken, refreshToken } = response.data;
 
     setTokens(accessToken, refreshToken);

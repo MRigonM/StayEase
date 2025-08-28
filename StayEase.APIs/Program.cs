@@ -1,6 +1,8 @@
+using MailKit;
 using StayEase.APIs.Extensions;
 using StayEase.APIs.Utility;
 using Newtonsoft.Json;
+using StayEase.Application.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
@@ -15,11 +17,14 @@ builder.Services.AddMvc()
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerConfigurations();
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+builder.Services.AddTransient<IMailService, MailService>();
+
 
 await builder.Services.JWTConfigurations(builder.Configuration);
 builder.Services.AddApplicationServices(builder.Configuration);
 
-// ✅ CORS: lejove React-in në :3000
+
 var corsPolicy = "ReactCors";
 builder.Services.AddCors(options =>
 {

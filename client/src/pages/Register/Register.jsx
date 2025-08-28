@@ -96,12 +96,13 @@ const Register = () => {
     try {
       setSubmitting(true);
       // IMPORTANT: do NOT set Content-Type header; let axios set multipart boundary automatically
-      const resp = await axios.post('https://localhost:5000/api/Account/Register', fd, {
+      const resp = await axios.post('http://localhost:5000/api/Account/Register', fd, {
         withCredentials: true,
       });
 
       // success
-      navigate('/logIn');
+      // navigate('/logIn');
+      navigate("/confirmEmail", { state: { email: email } });
     } catch (err) {
       console.error('Registration error full response:', err.response);
       const serverData = err.response?.data;
