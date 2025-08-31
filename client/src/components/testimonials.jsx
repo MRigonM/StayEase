@@ -47,8 +47,7 @@ export function Testimonials() {
                   <img
                     src={testimonial.image}
                     alt={testimonial.name}
-                    fill
-                    className="object-cover"
+                    className="object-cover w-full h-full"
                   />
                 </div>
                 <div>
