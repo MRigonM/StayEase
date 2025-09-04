@@ -1,23 +1,30 @@
-import axios from 'axios';
-import { setTokens } from './TokenService';
 import api from './AxiosInstance';
-
-const API_URL = 'https://localhost:5000/api/';
+import { setTokens } from './TokenService';
 
 export const loginUser = async (formData) => {
   try {
-    const response = await api.post(`${API_URL}Account/Login`, formData);
-    const { accessToken } = response.data;
+    const response = await api.post('/Account/Login', formData);
 
-    setTokens(accessToken);
+    const { isSuccess, message, data } = response.data;
 
-    return { success: true, accessToken };
+    if (isSuccess) {
+      // Adjust based on what backend actually sends
+      const accessToken = data?.accessToken || data?.token;
+      const userName = data?.userName || data?.email; // 👈 fallback to email if no name
+
+      if (accessToken) {
+        setTokens(accessToken, userName);
+      }
+
+      return { success: true, message, accessToken, userName };
+    } else {
+      return { success: false, message };
+    }
   } catch (error) {
     let message = 'Login failed. Please try again.';
     if (error.response?.data?.message) {
       message = error.response.data.message;
     }
-
     return { success: false, message };
   }
 };

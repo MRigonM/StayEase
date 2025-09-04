@@ -43,24 +43,32 @@ namespace StayEase.Application.Services
             var user = await _userManager.FindByEmailAsync(userDto.Email);
             if (user == null)
             {
-                return await Responses.FailurResponse("Your Email Is Not Found!.", HttpStatusCode.BadRequest);
-            }
-            else
-            {
-                var IsConfirmed = await _userManager.IsEmailConfirmedAsync(user);
-                if (!IsConfirmed) return await Responses.FailurResponse("Email is not confirmed yet!", HttpStatusCode.BadRequest);
-                var loginSuccess = await _signInManager.PasswordSignInAsync(user, userDto.Password, true, true);
-                if (!loginSuccess.Succeeded)
-                {
-                    return await Responses.FailurResponse("InCorrect Password!.", HttpStatusCode.BadRequest);
-                }
-                else
-                {
-                    return await Responses.SuccessResponse(await _authService.CreateTokenAsync(user, _userManager), "Success");
-                }
+                return await Responses.FailurResponse("Your email is not found!.", HttpStatusCode.BadRequest);
             }
 
+            var isConfirmed = await _userManager.IsEmailConfirmedAsync(user);
+            if (!isConfirmed)
+                return await Responses.FailurResponse("Email is not confirmed yet!", HttpStatusCode.BadRequest);
+
+            var loginSuccess = await _signInManager.PasswordSignInAsync(user, userDto.Password, true, true);
+            if (!loginSuccess.Succeeded)
+            {
+                return await Responses.FailurResponse("Incorrect Password!", HttpStatusCode.BadRequest);
+            }
+
+            // Create token
+            var token = await _authService.CreateTokenAsync(user, _userManager);
+
+            // Return proper object for frontend
+            var responseData = new
+            {
+                accessToken = token,
+                userName = user.FullName ?? user.UserName ?? user.Email
+            };
+
+            return await Responses.SuccessResponse(responseData, "Success");
         }
+
 
         public async Task<Responses> Register(RegisterDTO user)
         {
@@ -103,7 +111,7 @@ namespace StayEase.Application.Services
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(account);
                 var message = $"please verify you email by this code {code}";
                 await _mailService.SendEmailAsync(user.Email, "Email Confirmation", message);
-                return await Responses.SuccessResponse(await _authService.CreateTokenAsync(account, _userManager), $"Please confirm your email address! code {code}");
+                return await Responses.SuccessResponse(await _authService.CreateTokenAsync(account, _userManager), $"Please confirm your email address!");
             }
         }
 

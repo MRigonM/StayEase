@@ -1,29 +1,27 @@
-import React, {useState} from 'react'
-import {Link, useNavigate} from 'react-router-dom';
-import axios from 'axios';
-import Navbar from '../../components/Navbar'
-import {loginUser} from '../../authService/AuthService'; // Adjust the import path as necessary
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import Navbar from '../../components/Navbar';
+import { loginUser } from '../../authService/AuthService'; // Adjust the import path if needed
 
 const LogIn = () => {
-
-    const [formData, setFormData] = useState({email: '', password: ''});
+    const [formData, setFormData] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleChange = (e) => {
-        const {name, value} = e.target;
-        setFormData((prev) => ({...prev, [name]: value}));
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
 
         const result = await loginUser(formData);
+        console.log('Login result:', result); // 👈 check what’s coming back
 
         if (result.success) {
-            navigate("/")
+            navigate('/');
         } else {
             setError(result.message);
         }
@@ -41,8 +39,12 @@ const LogIn = () => {
                     </h2>
 
                     <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
+                        {/* Email Input */}
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                            <label
+                                htmlFor="email"
+                                className="block text-sm font-medium text-gray-700"
+                            >
                                 Email address
                             </label>
                             <input
@@ -57,9 +59,13 @@ const LogIn = () => {
                             />
                         </div>
 
+                        {/* Password Input */}
                         <div>
                             <div className="flex items-center justify-between">
-                                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                                <label
+                                    htmlFor="password"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
                                     Password
                                 </label>
                                 <Link
@@ -81,6 +87,13 @@ const LogIn = () => {
                             />
                         </div>
 
+                        {/* Error Message */}
+                        {error && (
+                            <p className="text-red-500 text-sm font-medium text-center">
+                                {error}
+                            </p>
+                        )}
+                        {/* Submit Button */}
                         <button
                             type="submit"
                             className="w-full flex justify-center rounded-lg bg-logoColor px-4 py-2.5 text-sm font-semibold text-white shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-logoColor transition"
@@ -90,15 +103,18 @@ const LogIn = () => {
                     </form>
 
                     <p className="mt-6 text-center text-sm text-gray-600">
-                        Need an account?{" "}
-                        <Link to="/Register" className="font-semibold text-logoColor hover:text-indigo-500">
+                        Need an account?{' '}
+                        <Link
+                            to="/Register"
+                            className="font-semibold text-logoColor hover:text-indigo-500"
+                        >
                             Register
                         </Link>
                     </p>
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default LogIn
+export default LogIn;
