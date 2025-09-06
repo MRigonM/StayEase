@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
-import { loginUser } from '../../authService/AuthService'; // Adjust the import path if needed
+import { loginUser } from '../../authService/AuthService';
 
 const LogIn = () => {
     const [formData, setFormData] = useState({ email: '', password: '' });
@@ -18,7 +18,7 @@ const LogIn = () => {
         setError('');
 
         const result = await loginUser(formData);
-        console.log('Login result:', result); // 👈 check what’s coming back
+        console.log('Login result:', result);
 
         if (result.success) {
             navigate('/');
@@ -39,7 +39,6 @@ const LogIn = () => {
                     </h2>
 
                     <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
-                        {/* Email Input */}
                         <div>
                             <label
                                 htmlFor="email"
@@ -59,7 +58,6 @@ const LogIn = () => {
                             />
                         </div>
 
-                        {/* Password Input */}
                         <div>
                             <div className="flex items-center justify-between">
                                 <label
@@ -87,13 +85,11 @@ const LogIn = () => {
                             />
                         </div>
 
-                        {/* Error Message */}
                         {error && (
                             <p className="text-red-500 text-sm font-medium text-center">
                                 {error}
                             </p>
                         )}
-                        {/* Submit Button */}
                         <button
                             type="submit"
                             className="w-full flex justify-center rounded-lg bg-logoColor px-4 py-2.5 text-sm font-semibold text-white shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-logoColor transition"

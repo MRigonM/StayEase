@@ -74,34 +74,27 @@ const Register = () => {
 
     const roleEnum = (role || 'customer').toLowerCase() === 'owner' ? 'Owner' : 'Customer';
 
-    // Build FormData (multipart/form-data) matching RegisterDTO property names (PascalCase)
     const fd = new FormData();
     fd.append('FirstName', firstName ?? '');
-    fd.append('MiddlName', middleName ?? '');
+    fd.append('MiddleName', middleName ?? '');
     fd.append('LastName', lastName ?? '');
     fd.append('Address', address ?? '');
     fd.append('PhoneNumber', phoneNumber ?? '');
     fd.append('Email', email ?? '');
     fd.append('UserName', userName ?? '');
     fd.append('Password', password ?? '');
-    // roles: append as one value; model binder should bind single value to IEnumerable<Role> as a single element
-    // If needed you can instead do fd.append('roles[0]', roleEnum)
     fd.append('roles', roleEnum);
 
-    // If you want to send an image later:
     if (image) {
       fd.append('Image', image);
     }
 
     try {
       setSubmitting(true);
-      // IMPORTANT: do NOT set Content-Type header; let axios set multipart boundary automatically
       const resp = await axios.post('https://localhost:5000/api/Account/Register', fd, {
         withCredentials: true,
       });
 
-      // success
-      // navigate('/logIn');
       navigate("/confirmEmail", { state: { email: email } });
     } catch (err) {
       console.error('Registration error full response:', err.response);
