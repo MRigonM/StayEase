@@ -1,6 +1,6 @@
 ﻿import api from "./AxiosInstance";
 import { getAccessToken } from "./TokenService";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 const CLAIM_KEYS = [
     "nameid",
@@ -28,6 +28,26 @@ export function getUserIdFromToken() {
     return null;
 }
 
+export function getUserNameFromToken() {
+    let token = getAccessToken();
+    if (!token) return null;
+
+    if (token.startsWith("Bearer ")) token = token.slice(7);
+
+    try {
+        const decoded = jwtDecode(token);
+        return (
+            decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] ||
+            decoded["unique_name"] ||
+            decoded["name"] ||
+            null
+        );
+    } catch (e) {
+        console.error("JWT decode failed:", e);
+        return null;
+    }
+}
+
 async function tryGet(path) {
     try {
         const res = await api.get(path);
@@ -40,11 +60,9 @@ async function tryGet(path) {
     }
 }
 
-export async function getUserById(id) {
+export async function getUserById(Id) {
     const candidates = [
-        `/User/GetUserById/${id}`,
-        `/Users/GetUserById/${id}`,
-        `/Account/GetUserById/${id}`,
+        `/Users/GetUserById/${Id}`
     ];
     for (const path of candidates) {
         const user = await tryGet(path);
@@ -55,10 +73,12 @@ export async function getUserById(id) {
 
 export async function getCurrentUserName() {
     const id = getUserIdFromToken();
-    if (!id) return null;
+    if (!id) return getUserNameFromToken(); // fallback
 
     const user = await getUserById(id);
-    if (!user) return null;
+    if (user) {
+        return user.username || user.fullName || getUserNameFromToken();
+    }
 
-    return (user.userName || user.firstName);
+    return getUserNameFromToken();
 }

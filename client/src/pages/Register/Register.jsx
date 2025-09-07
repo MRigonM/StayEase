@@ -76,7 +76,7 @@ const Register = () => {
 
     const fd = new FormData();
     fd.append('FirstName', firstName ?? '');
-    fd.append('MiddleName', middleName ?? '');
+    fd.append('MiddlName', middleName ?? '');
     fd.append('LastName', lastName ?? '');
     fd.append('Address', address ?? '');
     fd.append('PhoneNumber', phoneNumber ?? '');
