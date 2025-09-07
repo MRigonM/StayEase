@@ -17,13 +17,35 @@ const ResetPassword = () => {
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
 
+    // Real-time validation state
+    const [validationErrors, setValidationErrors] = useState({});
+
+    const validate = () => {
+        const errors = {};
+
+        if (!otp.trim()) errors.otp = "OTP is required";
+        if (!newPassword) {
+            errors.newPassword = "New password is required";
+        } else {
+            if (newPassword.length < 8) errors.newPassword = "Password must be at least 8 characters";
+            if (!/[A-Z]/.test(newPassword)) errors.newPassword = "Password must contain at least one uppercase letter";
+            if (!/[a-z]/.test(newPassword)) errors.newPassword = "Password must contain at least one lowercase letter";
+            if (!/[0-9]/.test(newPassword)) errors.newPassword = "Password must contain at least one number";
+            if (!/[^a-zA-Z0-9]/.test(newPassword)) errors.newPassword = "Password must contain at least one special character";
+        }
+
+        if (!confirmPassword) errors.confirmPassword = "Confirm password is required";
+        if (confirmPassword && newPassword !== confirmPassword) errors.confirmPassword = "Passwords do not match";
+
+        setValidationErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(""); setMessage("");
 
-        if (!otp.trim()) return setError("OTP is required");
-        if (!newPassword) return setError("New password is required");
-        if (newPassword !== confirmPassword) return setError("Passwords do not match");
+        if (!validate()) return;
 
         setLoading(true);
         const result = await resetPassword({
@@ -46,42 +68,61 @@ const ResetPassword = () => {
     return (
         <div>
             <Navbar />
-            <div className="flex min-h-screen flex-col items-center justify-center px-6">
-                <div className="w-full max-w-md">
-                    <h2 className="text-center text-2xl font-bold mb-6">Reset Password</h2>
+            <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-6 py-6">
+                <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 mt-2 mb-2">
+                    <h2 className="text-center text-3xl font-bold text-gray-900 mb-6">Change Your Password</h2>
+
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        <input
-                            type="text"
-                            placeholder="Enter OTP"
-                            value={otp}
-                            onChange={e => setOtp(e.target.value)}
-                            className="w-full rounded-md border px-3 py-2"
-                        />
-                        <input
-                            type="password"
-                            placeholder="New Password"
-                            value={newPassword}
-                            onChange={e => setNewPassword(e.target.value)}
-                            className="w-full rounded-md border px-3 py-2"
-                        />
-                        <input
-                            type="password"
-                            placeholder="Confirm Password"
-                            value={confirmPassword}
-                            onChange={e => setConfirmPassword(e.target.value)}
-                            className="w-full rounded-md border px-3 py-2"
-                        />
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Enter reset code</label>
+                            <input
+                                type="text"
+                                value={otp}
+                                onChange={(e) => setOtp(e.target.value)}
+                                className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 h-8 px-3 text-gray-900 placeholder-gray-400 shadow-sm focus:border-logoColor focus:ring-logoColor sm:text-sm"
+                            />
+                            {validationErrors.otp && <p className="text-red-600 text-sm mt-1">{validationErrors.otp}</p>}
+                        </div>
 
-                        {error && <p className="text-red-600 text-sm">{error}</p>}
-                        {message && <p className="text-green-600 text-sm">{message}</p>}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">New Password</label>
+                            <input
+                                type="password"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 h-8 px-3 text-gray-900 placeholder-gray-400 shadow-sm focus:border-logoColor focus:ring-logoColor sm:text-sm"
+                            />
+                            {validationErrors.newPassword && <p className="text-red-600 text-sm mt-1">{validationErrors.newPassword}</p>}
+                        </div>
 
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full rounded-md bg-indigo-600 text-white py-2"
-                        >
-                            {loading ? "Resetting..." : "Reset Password"}
-                        </button>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
+                            <input
+                                type="password"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 h-8 px-3 text-gray-900 placeholder-gray-400 shadow-sm focus:border-logoColor focus:ring-logoColor sm:text-sm"
+                            />
+                            {validationErrors.confirmPassword && <p className="text-red-600 text-sm mt-1">{validationErrors.confirmPassword}</p>}
+                        </div>
+
+                        {error && (
+                            <div className="rounded-md bg-red-50 p-3 text-sm text-red-700 border border-red-200">{error}</div>
+                        )}
+
+                        {message && (
+                            <div className="rounded-md bg-green-50 p-3 text-sm text-green-700 border border-green-200">{message}</div>
+                        )}
+
+                        <div>
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="flex w-full items-center justify-center rounded-lg bg-logoColor px-4 h-8 text-sm font-semibold text-white shadow-md hover:opacity-90 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-logoColor transition"
+                            >
+                                {loading ? "Resetting…" : "Reset Password"}
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
