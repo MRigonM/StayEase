@@ -1,23 +1,21 @@
-import axios from 'axios';
-import { setTokens } from './TokenService';
 import api from './AxiosInstance';
-
-const API_URL = 'http://localhost:2001/api/Auth';
+import { setTokens } from './TokenService';
 
 export const loginUser = async (formData) => {
   try {
-    const response = await api.post(`${API_URL}/login`, formData);
-    const { accessToken, refreshToken } = response.data;
+    const response = await api.post('/Account/Login', formData);
+    const { isSuccess, message, data } = response.data;
 
-    setTokens(accessToken, refreshToken);
-
-    return { success: true, accessToken };
+    if (isSuccess) {
+      const accessToken = data?.accessToken || data?.token;
+      if (accessToken) setTokens(accessToken);
+      return { success: true, message, accessToken };
+    } else {
+      return { success: false, message };
+    }
   } catch (error) {
     let message = 'Login failed. Please try again.';
-    if (error.response?.data?.message) {
-      message = error.response.data.message;
-    }
-
+    if (error.response?.data?.message) message = error.response.data.message;
     return { success: false, message };
   }
 };
