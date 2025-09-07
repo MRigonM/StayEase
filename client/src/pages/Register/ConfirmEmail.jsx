@@ -13,9 +13,26 @@ const ConfirmEmail = () => {
   // email e marrim nga navigate state
   const email = location.state?.email || "";
 
+  const validateCode = (value) => {
+    if (!value.trim()) {
+      return "Code is required";
+    }
+    if (!/^\d{6}$/.test(value)) {
+      return "Code must be a 6-digit number";
+    }
+    return "";
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    const validationError = validateCode(code);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     setSubmitting(true);
 
     try {
@@ -27,11 +44,10 @@ const ConfirmEmail = () => {
 
       console.log("Confirmation response:", resp.data);
 
-      // ✅ your backend puts success info in isSuccess
       if (resp.data?.isSuccess) {
-        navigate("/login"); // make sure your route casing matches
+        navigate("/login");
       } else {
-        setError(resp.data?.message || resp.data?.data || "Confirmation failed");
+        setError(resp.data?.message || "The confirmation code is incorrect");
       }
     } catch (err) {
       console.error("Email confirmation error:", err);
@@ -58,27 +74,28 @@ const ConfirmEmail = () => {
           </p>
         </div>
 
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <label
-                htmlFor="code"
-                className="block text-sm font-medium text-gray-900"
-              >
-                Confirmation Code
-              </label>
-              <div className="mt-2">
-                <input
-                  type="text"
-                  name="code"
-                  id="code"
-                  value={code}
-                  onChange={(e) => setCode(e.target.value)}
-                  required
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 outline-gray-300 focus:outline-2 focus:outline-indigo-600 sm:text-sm"
-                />
+          <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              <div>
+                <label
+                    htmlFor="code"
+                    className="block text-sm font-medium text-gray-900"
+                >
+                  Confirmation Code
+                </label>
+                <div className="mt-2">
+                  <input
+                      type="text"
+                      name="code"
+                      id="code"
+                      value={code}
+                      onChange={(e) => setCode(e.target.value)}
+                      maxLength={6}
+                      required
+                      className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 outline-gray-300 focus:outline-2 focus:outline-indigo-600 sm:text-sm"
+                  />
+                </div>
               </div>
-            </div>
 
             {error && (
               <div className="text-red-600 text-sm text-center">{error}</div>
