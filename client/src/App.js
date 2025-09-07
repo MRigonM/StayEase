@@ -7,7 +7,8 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 const Home = lazy(() => import('./pages/mainPages/Home'))
 const LogIn = lazy(() => import('./pages/LogIn/LogIn'))
 const Register = lazy(() => import('./pages/Register/Register'))
-const ForgotPassword = lazy(() => import('./pages/ForgotPassword/ForgotPassword'))
+const ForgotPassword = lazy(() => import('./pages/ForgotResetPassword/ForgetPassword'))
+const ResetPassword = lazy(() => import('./pages/ForgotResetPassword/ResetPassword'))
 const ConfirmEmail = lazy(() => import('./pages/Register/ConfirmEmail'))
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
             <Route exact path="/logIn" element={<LogIn />} />
             <Route exact path="/register" element={<Register />} />
             <Route exact path="/forgotPassword" element={<ForgotPassword />} />
+            <Route exact path="/resetPassword" element={<ResetPassword />} />
             <Route exact path="/confirmEmail" element={<ConfirmEmail />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
