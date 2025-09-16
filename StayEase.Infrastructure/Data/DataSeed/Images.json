@@ -1,10 +1,86 @@
 [
-    {
-        "Url": "Files/Image/Property/beach_house.jpg",
-        "PropertyId": "1"
-    },
-    {
-        "Url": "Files/Image/Property/modern_loft.jpg",
-        "PropertyId": "2"
-    }
+  {
+    "Url": "Files/Image/Property/beach_house.jpg",
+    "PropertyId": "1"
+  },
+  {
+    "Url": "Files/Image/Property/modern_loft.jpg",
+    "PropertyId": "2"
+  },
+  {
+    "Url": "Files/Image/Property/mountain_cabin.jpg",
+    "PropertyId": "3"
+  },
+  {
+    "Url": "Files/Image/Property/luxury_villa.jpg",
+    "PropertyId": "4"
+  },
+  {
+    "Url": "Files/Image/Property/downtown_studio.jpg",
+    "PropertyId": "5"
+  },
+  {
+    "Url": "Files/Image/Property/country_house.jpg",
+    "PropertyId": "6"
+  },
+  {
+    "Url": "Files/Image/Property/seaside_apartment.jpg",
+    "PropertyId": "7"
+  },
+  {
+    "Url": "Files/Image/Property/ski_lodge.jpg",
+    "PropertyId": "8"
+  },
+  {
+    "Url": "Files/Image/Property/desert_retreat.jpg",
+    "PropertyId": "9"
+  },
+  {
+    "Url": "Files/Image/Property/forest_treehouse.jpg",
+    "PropertyId": "10"
+  },
+  {
+    "Url": "Files/Image/Property/lake_cottage.jpg",
+    "PropertyId": "11"
+  },
+  {
+    "Url": "Files/Image/Property/historic_townhouse.jpg",
+    "PropertyId": "12"
+  },
+  {
+    "Url": "Files/Image/Property/modern_penthouse.jpg",
+    "PropertyId": "13"
+  },
+  {
+    "Url": "Files/Image/Property/countryside_barn.jpg",
+    "PropertyId": "14"
+  },
+  {
+    "Url": "Files/Image/Property/island_bungalow.jpg",
+    "PropertyId": "15"
+  },
+  {
+    "Url": "Files/Image/Property/eco_lodge.jpg",
+    "PropertyId": "16"
+  },
+  {
+    "Url": "Files/Image/Property/suburban_home.jpg",
+    "PropertyId": "17"
+  },
+  {
+    "Url": "Files/Image/Property/bohemian_loft.jpg",
+    "PropertyId": "18"
+  },
+  {
+    "Url": "Files/Image/Property/harbor_apartment.jpg",
+    "PropertyId": "19"
+  },
+  {
+    "Url": "Files/Image/Property/jungle_cabin.jpg",
+    "PropertyId": "20"
+  },
+  {
+    "Url": "Files/Image/Property/cliffside_villa.jpg",
+    "PropertyId": "21"
+  }
 ]

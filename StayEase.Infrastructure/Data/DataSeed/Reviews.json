@@ -1,14 +1,128 @@
 [
-    {
-        "Comment": "Amazing place with great views!",
-        "Stars": 5,
-        "PropertyId": "1",
-        "UserId": "2"
-    },
-    {
-        "Comment": "Comfortable and well located.",
-        "Stars": 4,
-        "PropertyId": "2",
-        "UserId": "1"
-    }
-] 
+  {
+    "Comment": "Amazing place with great views!",
+    "Stars": 5,
+    "PropertyId": "1",
+    "UserId": "2"
+  },
+  {
+    "Comment": "Comfortable and well located.",
+    "Stars": 4,
+    "PropertyId": "2",
+    "UserId": "3"
+  },
+  {
+    "Comment": "Cozy and perfect for a mountain getaway.",
+    "Stars": 5,
+    "PropertyId": "3",
+    "UserId": "1"
+  },
+  {
+    "Comment": "The villa was luxurious and private.",
+    "Stars": 5,
+    "PropertyId": "4",
+    "UserId": "4"
+  },
+  {
+    "Comment": "Small but very convenient location.",
+    "Stars": 4,
+    "PropertyId": "5",
+    "UserId": "5"
+  },
+  {
+    "Comment": "Great countryside stay, very peaceful.",
+    "Stars": 4,
+    "PropertyId": "6",
+    "UserId": "6"
+  },
+  {
+    "Comment": "Loved the sea view and balcony.",
+    "Stars": 5,
+    "PropertyId": "7",
+    "UserId": "7"
+  },
+  {
+    "Comment": "Perfect for skiing holidays!",
+    "Stars": 5,
+    "PropertyId": "8",
+    "UserId": "8"
+  },
+  {
+    "Comment": "Unforgettable desert experience.",
+    "Stars": 4,
+    "PropertyId": "9",
+    "UserId": "3"
+  },
+  {
+    "Comment": "Treehouse was magical, kids loved it.",
+    "Stars": 5,
+    "PropertyId": "10",
+    "UserId": "4"
+  },
+  {
+    "Comment": "Calm lake cottage, very relaxing.",
+    "Stars": 4,
+    "PropertyId": "11",
+    "UserId": "5"
+  },
+  {
+    "Comment": "Felt like stepping back in history.",
+    "Stars": 4,
+    "PropertyId": "12",
+    "UserId": "6"
+  },
+  {
+    "Comment": "Best penthouse in the city, stunning view!",
+    "Stars": 5,
+    "PropertyId": "13",
+    "UserId": "7"
+  },
+  {
+    "Comment": "Rustic and charming barn stay.",
+    "Stars": 4,
+    "PropertyId": "14",
+    "UserId": "8"
+  },
+  {
+    "Comment": "Private island bungalow was paradise.",
+    "Stars": 5,
+    "PropertyId": "15",
+    "UserId": "2"
+  },
+  {
+    "Comment": "Eco lodge had beautiful surroundings.",
+    "Stars": 5,
+    "PropertyId": "16",
+    "UserId": "3"
+  },
+  {
+    "Comment": "Nice family home in suburbs.",
+    "Stars": 4,
+    "PropertyId": "17",
+    "UserId": "4"
+  },
+  {
+    "Comment": "Loved the artistic loft atmosphere.",
+    "Stars": 5,
+    "PropertyId": "18",
+    "UserId": "5"
+  },
+  {
+    "Comment": "Harbor view was incredible.",
+    "Stars": 5,
+    "PropertyId": "19",
+    "UserId": "6"
+  },
+  {
+    "Comment": "Great jungle adventure stay.",
+    "Stars": 4,
+    "PropertyId": "20",
+    "UserId": "7"
+  },
+  {
+    "Comment": "The cliffside villa was breathtaking!",
+    "Stars": 5,
+    "PropertyId": "21",
+    "UserId": "8"
+  }
+]

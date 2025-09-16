@@ -1,10 +1,107 @@
 [
-    {
-        "Name": "New York",
-        "CountryId": 1
-    },
-    {
-        "Name": "San Francisco",
-        "CountryId": 1
-    }
+  {
+    "Id": 1,
+    "Name": "New York",
+    "CountryId": 1
+  },
+  {
+    "Id": 2,
+    "Name": "San Francisco",
+    "CountryId": 1
+  },
+  {
+    "Id": 3,
+    "Name": "Aspen",
+    "CountryId": 1
+  },
+  {
+    "Id": 4,
+    "Name": "Los Angeles",
+    "CountryId": 1
+  },
+  {
+    "Id": 5,
+    "Name": "Chicago",
+    "CountryId": 1
+  },
+  {
+    "Id": 6,
+    "Name": "Dallas",
+    "CountryId": 1
+  },
+  {
+    "Id": 7,
+    "Name": "Miami",
+    "CountryId": 1
+  },
+  {
+    "Id": 8,
+    "Name": "Denver",
+    "CountryId": 1
+  },
+  {
+    "Id": 9,
+    "Name": "Las Vegas",
+    "CountryId": 1
+  },
+  {
+    "Id": 10,
+    "Name": "Seattle",
+    "CountryId": 1
+  },
+  {
+    "Id": 11,
+    "Name": "Lake Tahoe",
+    "CountryId": 1
+  },
+  {
+    "Id": 12,
+    "Name": "Boston",
+    "CountryId": 1
+  },
+  {
+    "Id": 13,
+    "Name": "Rome",
+    "CountryId": 3
+  },
+  {
+    "Id": 14,
+    "Name": "Florence",
+    "CountryId": 3
+  },
+  {
+    "Id": 15,
+    "Name": "Sicily",
+    "CountryId": 3
+  },
+  {
+    "Id": 16,
+    "Name": "Milan",
+    "CountryId": 3
+  },
+  {
+    "Id": 17,
+    "Name": "Cairo",
+    "CountryId": 2
+  },
+  {
+    "Id": 18,
+    "Name": "Alexandria",
+    "CountryId": 2
+  },
+  {
+    "Id": 19,
+    "Name": "Dubai",
+    "CountryId": 4
+  },
+  {
+    "Id": 20,
+    "Name": "Abu Dhabi",
+    "CountryId": 4
+  },
+  {
+    "Id": 21,
+    "Name": "Sharjah",
+    "CountryId": 4
+  }
 ]

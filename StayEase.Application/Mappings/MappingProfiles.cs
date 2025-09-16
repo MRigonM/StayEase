@@ -47,7 +47,7 @@ public class MappingProfiles : Profile
                  .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Category.Name));
 
             CreateMap<RoomService, RoomServicesDto>()
-                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Decscription));
+                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description));
                 
             CreateMap<Image,ImageDto>()
                 .ForMember(dest=>dest.Url,opt=>opt.MapFrom(opt=>opt.Url));
@@ -95,7 +95,7 @@ public class MappingProfiles : Profile
 
             CreateMap<RoomServicesToCreateDTO, RoomService>()
             .ForMember(dest => dest.PropertyId, opt => opt.MapFrom(src => src.PropertyId))
-            .ForMember(dest => dest.Decscription, opt => opt.MapFrom(src => src.Description));
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description));
 
     }
 }

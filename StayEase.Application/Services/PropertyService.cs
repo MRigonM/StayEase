@@ -82,10 +82,10 @@ public class PropertyService : IPropertyService
             }
 
             string PropertyId = Guid.NewGuid().ToString();
+
             var images = new List<Image>();
             foreach (var img in propertyDTO.Images)
             {
-                // upload image and take his url to assign it for object of images and add it in images list
                 var ImgName = await DocumentSettings.UploadFile(img, SD.Image, "Property");
                 var url = _configuration["BaseUrl"] + $"{ImgName}";
                 var newImage = new Image()
@@ -99,17 +99,22 @@ public class PropertyService : IPropertyService
             var roomServices = new List<RoomServicesToCreateDTO>();
             foreach (var item in propertyDTO.RoomServices)
             {
-                // map every object from string to room service 
                 var RS = new RoomServicesToCreateDTO()
                 {
                     PropertyId = PropertyId,
                     Description = item.Description,
                 };
-
                 roomServices.Add(RS);
             }
-
             var MappedRoomServices = _mapper.Map<ICollection<RoomServicesToCreateDTO>, ICollection<RoomService>>(roomServices);
+
+            var propertyCategories = propertyDTO.Categories
+                .Select(c => new PropertyCategory
+                {
+                    PropertyId = PropertyId,
+                    CategoryId = c.Id
+                }).ToList();
+
             var MappedProperty = new Property()
             {
                 Id = PropertyId,
@@ -119,15 +124,19 @@ public class PropertyService : IPropertyService
                 PlaceType = propertyDTO.PlaceType,
                 Location = location,
                 Owner = owner,
+                RoomServices = MappedRoomServices.ToList(),
+                PropertyCategories = propertyCategories 
             };
+
             await _unitOfWork.Repository<Property, string>().AddAsync(MappedProperty);
             var Result = await _unitOfWork.CompleteAsync();
             if (Result <= 0) return await Responses.FailurResponse(System.Net.HttpStatusCode.BadRequest);
 
             await _unitOfWork.Repository<Image, int>().AddRangeAsync(images);
             await _unitOfWork.CompleteAsync();
-            return await Responses.SuccessResponse("Property has been created successfuly!");
+            return await Responses.SuccessResponse("Property has been created successfully!");
         }
+
     
         public async Task<Responses> DeletePropertyAsync(string propertyId)
         {
