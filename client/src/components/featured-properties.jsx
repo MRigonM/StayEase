@@ -38,7 +38,7 @@ export function FeaturedProperties() {
             title: p.name,
             description: p.description,
             price: p.nightPrice,
-            rating: avgRating.toFixed(1),
+            rating: avgRating,
             reviews: p.reviews ? p.reviews.length : 0,
             image:
               p.imageUrls && p.imageUrls.length > 0
@@ -53,7 +53,16 @@ export function FeaturedProperties() {
           };
         });
 
-        setItems(mapped);
+        // Sorto sipas rating dhe merre top 10
+        const topTen = mapped
+          .sort((a, b) => b.rating - a.rating)
+          .slice(0, 10)
+          .map((p) => ({
+            ...p,
+            rating: p.rating.toFixed(1),
+          }));
+
+        setItems(topTen);
       } catch (e) {
         setErr(e.message || "Failed to load");
       } finally {
@@ -66,7 +75,7 @@ export function FeaturedProperties() {
     <section className="py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-6">
         <h2 className="text-3xl md:text-4xl font-bold mb-8">
-          Featured Properties
+          Top 10 Properties
         </h2>
 
         {loading && <p className="text-gray-500">Loading properties…</p>}
