@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Navbar from "../../components/Navbar";
 import { Star, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const API_URL = "https://localhost:5000/api/Property/GetProperties";
 
-export function FeaturedProperties() {
+const Explore = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(null);
@@ -21,12 +22,9 @@ export function FeaturedProperties() {
           headers: { Accept: "application/json" },
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
         const json = await res.json();
-        console.log("API RESPONSE:", json);
 
         const mapped = json.data.map((p, idx) => {
-          // Llogarit rating mesatar nga reviews
           let avgRating = 0;
           if (p.reviews && p.reviews.length > 0) {
             avgRating =
@@ -39,7 +37,7 @@ export function FeaturedProperties() {
             title: p.name,
             description: p.description,
             price: p.nightPrice,
-            rating: avgRating,
+            rating: avgRating.toFixed(1),
             reviews: p.reviews || [],
             image:
               p.imageUrls && p.imageUrls.length > 0
@@ -54,16 +52,7 @@ export function FeaturedProperties() {
           };
         });
 
-        // Sorto sipas rating dhe merre top 10
-        const topTen = mapped
-          .sort((a, b) => b.rating - a.rating)
-          .slice(0, 10)
-          .map((p) => ({
-            ...p,
-            rating: p.rating.toFixed(1),
-          }));
-
-        setItems(topTen);
+        setItems(mapped);
       } catch (e) {
         setErr(e.message || "Failed to load");
       } finally {
@@ -73,24 +62,33 @@ export function FeaturedProperties() {
   }, []);
 
   return (
-    <section className="py-16 md:py-24">
-      <div className="container mx-auto px-4 md:px-6">
-        <h2 className="text-3xl md:text-4xl font-bold mb-8">
-          Top 10 Properties
-        </h2>
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Navbar />
 
+      {/* Hero Section */}
+      <section className="bg-gradient-to-r from-teal-600 to-blue-600 text-white py-16 text-center">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          Explore Properties
+        </h1>
+        <p className="text-lg max-w-2xl mx-auto">
+          Discover unique homes, villas, apartments and more – all around the
+          world. Choose your next stay and start your adventure today!
+        </p>
+      </section>
+
+      {/* Properties Section */}
+      <main className="flex-1 container mx-auto px-4 py-12">
         {loading && <p className="text-gray-500">Loading properties…</p>}
         {err && <p className="text-red-600">Error: {err}</p>}
 
         {!loading && !err && (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {items.map((property) => (
-              <Link
-              to={`/details/${property.id}`}
+              <Link to={`/details/${property.id}`}
                 key={property.id}
-                className="rounded-xl overflow-hidden border hover:shadow-lg transition-shadow"
+                className="rounded-xl overflow-hidden bg-white border shadow-sm hover:shadow-lg transition-shadow flex flex-col"
               >
-                <div className="relative h-[200px] w-full">
+                <div className="relative h-48 w-full">
                   <img
                     src={property.image}
                     alt={property.title}
@@ -98,10 +96,10 @@ export function FeaturedProperties() {
                   />
                   {property.tags.length > 0 && (
                     <div className="absolute top-3 left-3 flex gap-2">
-                      {property.tags.map((tag, index) => (
+                      {property.tags.map((tag, i) => (
                         <span
-                          key={index}
-                          className="px-2 py-1 text-xs font-medium bg-white/80 text-black rounded"
+                          key={i}
+                          className="px-2 py-1 text-xs font-medium bg-white/90 text-gray-800 rounded"
                         >
                           {tag}
                         </span>
@@ -109,20 +107,18 @@ export function FeaturedProperties() {
                     </div>
                   )}
                 </div>
-                <div className="p-4">
+
+                <div className="p-4 flex flex-col flex-1">
                   <div className="flex items-center text-sm text-gray-500 mb-2">
                     <MapPin className="h-4 w-4 mr-1 text-teal-600" />
                     {property.location}
                   </div>
-                  <h3 className="font-bold text-lg mb-2 line-clamp-1">
-                    {property.title}
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                  <h3 className="font-bold text-lg mb-2">{property.title}</h3>
+                  <p className="text-sm text-gray-600 mb-3 flex-1 line-clamp-2">
                     {property.description}
                   </p>
 
-                  {/* Rating kryesor */}
-                  <div className="flex justify-between items-center mb-3">
+                  <div className="flex justify-between items-center mt-auto">
                     <div className="flex items-center">
                       <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
                       <span className="font-medium">{property.rating}</span>
@@ -135,36 +131,27 @@ export function FeaturedProperties() {
                       <span className="text-gray-500"> / night</span>
                     </div>
                   </div>
-
-                  {/* Komentet nga reviews */}
-                  {property.reviews.length > 0 && (
-                    <div className="mt-3 border-t pt-2">
-                      <h4 className="text-sm font-semibold mb-1">Reviews:</h4>
-                      <ul className="space-y-1">
-                        {property.reviews.map((r, i) => (
-                          <li key={i} className="text-sm text-gray-700">
-                            <div className="flex items-center">
-                              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
-                              <span className="font-medium mr-2">
-                                {r.stars}
-                              </span>
-                              <span className="italic">"{r.comment}"</span>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
                 </div>
               </Link>
             ))}
-
-            {items.length === 0 && (
-              <p className="text-gray-500">No properties found.</p>
-            )}
           </div>
         )}
-      </div>
-    </section>
+
+        {items.length === 0 && !loading && (
+          <p className="text-gray-500 text-center mt-8">
+            No properties found.
+          </p>
+        )}
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-gray-100 py-6 mt-12 border-t">
+        <div className="container mx-auto px-4 text-center text-gray-600 text-sm">
+          © {new Date().getFullYear()} StayEase. All rights reserved.
+        </div>
+      </footer>
+    </div>
   );
-}
+};
+
+export default Explore;
