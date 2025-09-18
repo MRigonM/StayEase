@@ -18,5 +18,65 @@
         "Address": "456-Broadway-Avenue-SanFrancisco-USA",
         "ProfileImage": "Files/Image/UserProfile/2.jpg",
         "PhoneNumber": "09876543211"
+    },
+    {
+        "Id": "3",
+        "FullName": "Michael Johnson",
+        "UserName": "michael.johnson",
+        "Email": "michael.johnson@gmail.com",
+        "EmailConfirmed": true,
+        "Address": "789-Lakeview-Road-Chicago-USA",
+        "ProfileImage": "Files/Image/UserProfile/3.jpg",
+        "PhoneNumber": "12125551234"
+    },
+    {
+        "Id": "4",
+        "FullName": "Emily Davis",
+        "UserName": "emily.davis",
+        "Email": "emily.davis@gmail.com",
+        "EmailConfirmed": true,
+        "Address": "321-Ocean-Drive-Miami-USA",
+        "ProfileImage": "Files/Image/UserProfile/4.jpg",
+        "PhoneNumber": "13125554321"
+    },
+    {
+        "Id": "5",
+        "FullName": "William Brown",
+        "UserName": "william.brown",
+        "Email": "william.brown@gmail.com",
+        "EmailConfirmed": true,
+        "Address": "654-Pine-Street-Seattle-USA",
+        "ProfileImage": "Files/Image/UserProfile/5.jpg",
+        "PhoneNumber": "14125556789"
+    },
+    {
+        "Id": "6",
+        "FullName": "Olivia Wilson",
+        "UserName": "olivia.wilson",
+        "Email": "olivia.wilson@gmail.com",
+        "EmailConfirmed": true,
+        "Address": "987-Sunset-Boulevard-LosAngeles-USA",
+        "ProfileImage": "Files/Image/UserProfile/6.jpg",
+        "PhoneNumber": "15125559876"
+    },
+    {
+        "Id": "7",
+        "FullName": "James Miller",
+        "UserName": "james.miller",
+        "Email": "james.miller@gmail.com",
+        "EmailConfirmed": true,
+        "Address": "222-Hilltop-Road-Denver-USA",
+        "ProfileImage": "Files/Image/UserProfile/7.jpg",
+        "PhoneNumber": "16125552345"
+    },
+    {
+        "Id": "8",
+        "FullName": "Sophia Martinez",
+        "UserName": "sophia.martinez",
+        "Email": "sophia.martinez@gmail.com",
+        "EmailConfirmed": true,
+        "Address": "888-River-Street-Boston-USA",
+        "ProfileImage": "Files/Image/UserProfile/8.jpg",
+        "PhoneNumber": "17125553456"
     }
-]  
+]

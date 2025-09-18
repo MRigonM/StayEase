@@ -6,7 +6,7 @@
         "NightPrice": 300,
         "Rate": 4.5,
         "PlaceType": "House",
-        "LocationId": 1,
+        "LocationId": 7,
         "OwnerId": "1"
     },
     {
@@ -16,7 +16,197 @@
         "NightPrice": 200,
         "Rate": 4.7,
         "PlaceType": "Apartment",
-        "LocationId": 2,
+        "LocationId": 1,
         "OwnerId": "2"
+    },
+    {
+        "Id": "3",
+        "Name": "Mountain Cabin",
+        "Description": "Rustic cabin in the mountains with fireplace.",
+        "NightPrice": 150,
+        "Rate": 4.3,
+        "PlaceType": "Cabin",
+        "LocationId": 3,
+        "OwnerId": "1"
+    },
+    {
+        "Id": "4",
+        "Name": "Luxury Villa",
+        "Description": "Private villa with pool and garden.",
+        "NightPrice": 500,
+        "Rate": 4.9,
+        "PlaceType": "Villa",
+        "LocationId": 4,
+        "OwnerId": "1"
+    },
+    {
+        "Id": "5",
+        "Name": "Downtown Studio",
+        "Description": "Compact studio in the heart of downtown.",
+        "NightPrice": 120,
+        "Rate": 4.1,
+        "PlaceType": "Studio",
+        "LocationId": 5,
+        "OwnerId": "1"
+    },
+    {
+        "Id": "6",
+        "Name": "Country House",
+        "Description": "Peaceful house in the countryside.",
+        "NightPrice": 180,
+        "Rate": 4.2,
+        "PlaceType": "House",
+        "LocationId": 6,
+        "OwnerId": "1"
+    },
+    {
+        "Id": "7",
+        "Name": "Seaside Apartment",
+        "Description": "Apartment with balcony overlooking the sea.",
+        "NightPrice": 220,
+        "Rate": 4.6,
+        "PlaceType": "Apartment",
+        "LocationId": 7,
+        "OwnerId": "2"
+    },
+    {
+        "Id": "8",
+        "Name": "Ski Lodge",
+        "Description": "Perfect lodge near ski slopes.",
+        "NightPrice": 250,
+        "Rate": 4.8,
+        "PlaceType": "Lodge",
+        "LocationId": 8,
+        "OwnerId": "2"
+    },
+    {
+        "Id": "9",
+        "Name": "Desert Retreat",
+        "Description": "Unique stay in desert with modern amenities.",
+        "NightPrice": 270,
+        "Rate": 4.4,
+        "PlaceType": "House",
+        "LocationId": 9,
+        "OwnerId": "2"
+    },
+    {
+        "Id": "10",
+        "Name": "Forest Treehouse",
+        "Description": "Treehouse stay surrounded by nature.",
+        "NightPrice": 190,
+        "Rate": 4.7,
+        "PlaceType": "Treehouse",
+        "LocationId": 10,
+        "OwnerId": "2"
+    },
+    {
+        "Id": "11",
+        "Name": "Lake Cottage",
+        "Description": "Cottage near a lake with boat access.",
+        "NightPrice": 210,
+        "Rate": 4.5,
+        "PlaceType": "Cottage",
+        "LocationId": 11,
+        "OwnerId": "1"
+    },
+    {
+        "Id": "12",
+        "Name": "Historic Townhouse",
+        "Description": "Stay in a historic townhouse downtown.",
+        "NightPrice": 230,
+        "Rate": 4.3,
+        "PlaceType": "Townhouse",
+        "LocationId": 12,
+        "OwnerId": "2"
+    },
+    {
+        "Id": "13",
+        "Name": "Modern Penthouse",
+        "Description": "Luxury penthouse with panoramic city view.",
+        "NightPrice": 600,
+        "Rate": 5.0,
+        "PlaceType": "Penthouse",
+        "LocationId": 13,
+        "OwnerId": "2"
+    },
+    {
+        "Id": "14",
+        "Name": "Countryside Barn",
+        "Description": "Converted barn with rustic charm.",
+        "NightPrice": 160,
+        "Rate": 4.2,
+        "PlaceType": "Barn",
+        "LocationId": 14,
+        "OwnerId": "1"
+    },
+    {
+        "Id": "15",
+        "Name": "Island Bungalow",
+        "Description": "Beachfront bungalow on a private island.",
+        "NightPrice": 450,
+        "Rate": 4.8,
+        "PlaceType": "Bungalow",
+        "LocationId": 15,
+        "OwnerId": "1"
+    },
+    {
+        "Id": "16",
+        "Name": "Eco Lodge",
+        "Description": "Sustainable eco lodge surrounded by jungle.",
+        "NightPrice": 280,
+        "Rate": 4.6,
+        "PlaceType": "Lodge",
+        "LocationId": 16,
+        "OwnerId": "1"
+    },
+    {
+        "Id": "17",
+        "Name": "Suburban Home",
+        "Description": "Spacious home in quiet suburban area.",
+        "NightPrice": 170,
+        "Rate": 4.0,
+        "PlaceType": "House",
+        "LocationId": 17,
+        "OwnerId": "2"
+    },
+    {
+        "Id": "18",
+        "Name": "Bohemian Loft",
+        "Description": "Artistic loft with creative vibes.",
+        "NightPrice": 200,
+        "Rate": 4.5,
+        "PlaceType": "Loft",
+        "LocationId": 18,
+        "OwnerId": "2"
+    },
+    {
+        "Id": "19",
+        "Name": "Harbor View Apartment",
+        "Description": "Apartment with stunning harbor views.",
+        "NightPrice": 260,
+        "Rate": 4.6,
+        "PlaceType": "Apartment",
+        "LocationId": 19,
+        "OwnerId": "1"
+    },
+    {
+        "Id": "20",
+        "Name": "Jungle Cabin",
+        "Description": "Cabin deep in the jungle with wildlife nearby.",
+        "NightPrice": 140,
+        "Rate": 4.1,
+        "PlaceType": "Cabin",
+        "LocationId": 20,
+        "OwnerId": "2"
+    },
+    {
+        "Id": "21",
+        "Name": "Cliffside Villa",
+        "Description": "Luxury villa built on a cliff with infinity pool.",
+        "NightPrice": 700,
+        "Rate": 5.0,
+        "PlaceType": "Villa",
+        "LocationId": 21,
+        "OwnerId": "1"
     }
 ]

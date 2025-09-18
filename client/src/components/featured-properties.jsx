@@ -1,199 +1,169 @@
 "use client";
 
-import React, { useState, useRef } from "react";
-import { Star, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Star, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 
-// Dummy data for featured properties WILL BECOME DYNAMIC SOON
-const featuredProperties = [
-  {
-    id: 1,
-    title: "Luxury Beach Villa",
-    location: "Malibu, California",
-    price: 350,
-    rating: 4.9,
-    reviews: 128,
-    image: "https://placehold.co/600x400/png",
-    tags: ["Beachfront", "Pool"],
-  },
-  {
-    id: 2,
-    title: "Mountain Retreat Cabin",
-    location: "Aspen, Colorado",
-    price: 275,
-    rating: 4.8,
-    reviews: 96,
-    image: "https://placehold.co/600x400/png",
-    tags: ["Mountain View", "Hot Tub"],
-  },
-  {
-    id: 3,
-    title: "Downtown Luxury Loft",
-    location: "New York City, NY",
-    price: 225,
-    rating: 4.7,
-    reviews: 84,
-    image: "https://placehold.co/600x400/png",
-    tags: ["City View", "Modern"],
-  },
-  {
-    id: 4,
-    title: "Lakeside Cottage",
-    location: "Lake Tahoe, Nevada",
-    price: 195,
-    rating: 4.8,
-    reviews: 72,
-    image: "https://placehold.co/600x400/png",
-    tags: ["Lakefront", "Fireplace"],
-  },
-  {
-    id: 5,
-    title: "Historic Townhouse",
-    location: "Charleston, SC",
-    price: 210,
-    rating: 4.9,
-    reviews: 65,
-    image: "https://placehold.co/600x400/png",
-    tags: ["Historic", "Garden"],
-  },
-  {
-    id: 6,
-    title: "Oceanfront Condo",
-    location: "Miami Beach, Florida",
-    price: 240,
-    rating: 4.7,
-    reviews: 91,
-    image: "https://placehold.co/600x400/png",
-    tags: ["Ocean View", "Pool"],
-  },
-];
+const API_URL = "https://localhost:5000/api/Property/GetProperties";
 
 export function FeaturedProperties() {
-  const scrollContainerRef = useRef(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState(null);
 
-  const checkScrollButtons = () => {
-    if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } =
-        scrollContainerRef.current;
-      setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
-    }
-  };
+  useEffect(() => {
+    (async () => {
+      try {
+        setLoading(true);
+        setErr(null);
 
-  const scroll = (direction) => {
-    if (scrollContainerRef.current) {
-      const { clientWidth } = scrollContainerRef.current;
-      const scrollAmount =
-        direction === "left" ? -clientWidth / 2 : clientWidth / 2;
-      scrollContainerRef.current.scrollBy({
-        left: scrollAmount,
-        behavior: "smooth",
-      });
+        const res = await fetch(API_URL, {
+          headers: { Accept: "application/json" },
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-      setTimeout(checkScrollButtons, 300);
-    }
-  };
+        const json = await res.json();
+        console.log("API RESPONSE:", json);
+
+        const mapped = json.data.map((p, idx) => {
+          // Llogarit rating mesatar nga reviews
+          let avgRating = 0;
+          if (p.reviews && p.reviews.length > 0) {
+            avgRating =
+              p.reviews.reduce((sum, r) => sum + r.stars, 0) /
+              p.reviews.length;
+          }
+
+          return {
+            id: idx,
+            title: p.name,
+            description: p.description,
+            price: p.nightPrice,
+            rating: avgRating,
+            reviews: p.reviews || [],
+            image:
+              p.imageUrls && p.imageUrls.length > 0
+                ? `https://localhost:5000/${p.imageUrls[0]}`
+                : "https://placehold.co/600x400/png",
+            location:
+              p.location?.name ||
+              p.country?.name ||
+              p.region?.name ||
+              "Unknown location",
+            tags: p.placeType ? [p.placeType] : [],
+          };
+        });
+
+        // Sorto sipas rating dhe merre top 10
+        const topTen = mapped
+          .sort((a, b) => b.rating - a.rating)
+          .slice(0, 10)
+          .map((p) => ({
+            ...p,
+            rating: p.rating.toFixed(1),
+          }));
+
+        setItems(topTen);
+      } catch (e) {
+        setErr(e.message || "Failed to load");
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
 
   return (
     <section className="py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-bold">
-              Featured Properties
-            </h2>
-            <p className="text-lg text-gray-600 mt-2">
-              Discover our most popular vacation rentals
-            </p>
-          </div>
+        <h2 className="text-3xl md:text-4xl font-bold mb-8">
+          Top 10 Properties
+        </h2>
 
-          <div className="hidden md:flex space-x-2">
-            <button
-              onClick={() => scroll("left")}
-              disabled={!canScrollLeft}
-              className={`p-2 border rounded-full ${
-                !canScrollLeft
-                  ? "opacity-50 cursor-not-allowed"
-                  : "hover:bg-gray-100"
-              }`}
-            >
-              <ChevronLeft className="h-5 w-5" />
-              <span className="sr-only">Scroll left</span>
-            </button>
-            <button
-              onClick={() => scroll("right")}
-              disabled={!canScrollRight}
-              className={`p-2 border rounded-full ${
-                !canScrollRight
-                  ? "opacity-50 cursor-not-allowed"
-                  : "hover:bg-gray-100"
-              }`}
-            >
-              <ChevronRight className="h-5 w-5" />
-              <span className="sr-only">Scroll right</span>
-            </button>
-          </div>
-        </div>
+        {loading && <p className="text-gray-500">Loading properties…</p>}
+        {err && <p className="text-red-600">Error: {err}</p>}
 
-        <div
-          ref={scrollContainerRef}
-          className="flex overflow-x-auto space-x-4 pb-6 -mx-4 px-4 scrollbar-hide"
-          onScroll={checkScrollButtons}
-        >
-          {featuredProperties.map((property) => (
-            <div
-              key={property.id}
-              className="min-w-[300px] max-w-[300px] rounded-xl overflow-hidden flex-shrink-0 hover:shadow-lg transition-shadow border"
-            >
-              <div className="relative h-[200px] w-full">
-                <img
-                  src={property.image || "https://placehold.co/600x400/png"}
-                  alt={property.title}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute top-3 left-3 flex gap-2">
-                  {property.tags.map((tag, index) => (
-                    <span
-                      key={index}
-                      className="px-2 py-1 text-xs font-medium bg-white/80 text-black rounded hover:bg-white/90"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+        {!loading && !err && (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {items.map((property) => (
+              <Link
+              to={`/details/${property.id}`}
+                key={property.id}
+                className="rounded-xl overflow-hidden border hover:shadow-lg transition-shadow"
+              >
+                <div className="relative h-[200px] w-full">
+                  <img
+                    src={property.image}
+                    alt={property.title}
+                    className="w-full h-full object-cover"
+                  />
+                  {property.tags.length > 0 && (
+                    <div className="absolute top-3 left-3 flex gap-2">
+                      {property.tags.map((tag, index) => (
+                        <span
+                          key={index}
+                          className="px-2 py-1 text-xs font-medium bg-white/80 text-black rounded"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </div>
-              <div className="p-4">
-                <div className="flex items-center text-sm text-gray-500 mb-2">
-                  <MapPin className="h-4 w-4 mr-1 text-teal-600" />
-                  {property.location}
-                </div>
-                <h3 className="font-bold text-lg mb-2 line-clamp-1">
-                  {property.title}
-                </h3>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
-                    <span className="font-medium">{property.rating}</span>
-                    <span className="text-gray-500 ml-1">
-                      ({property.reviews})
-                    </span>
+                <div className="p-4">
+                  <div className="flex items-center text-sm text-gray-500 mb-2">
+                    <MapPin className="h-4 w-4 mr-1 text-teal-600" />
+                    {property.location}
                   </div>
-                  <div>
-                    <span className="font-bold">${property.price}</span>
-                    <span className="text-gray-500"> / night</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+                  <h3 className="font-bold text-lg mb-2 line-clamp-1">
+                    {property.title}
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                    {property.description}
+                  </p>
 
-        <div className="text-center mt-8">
-          <button className="px-4 py-2 border border-teal-600 text-teal-600 rounded hover:bg-teal-50">
-            View All Properties
-          </button>
-        </div>
+                  {/* Rating kryesor */}
+                  <div className="flex justify-between items-center mb-3">
+                    <div className="flex items-center">
+                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
+                      <span className="font-medium">{property.rating}</span>
+                      <span className="text-gray-500 ml-1">
+                        ({property.reviews.length})
+                      </span>
+                    </div>
+                    <div>
+                      <span className="font-bold">${property.price}</span>
+                      <span className="text-gray-500"> / night</span>
+                    </div>
+                  </div>
+
+                  {/* Komentet nga reviews */}
+                  {property.reviews.length > 0 && (
+                    <div className="mt-3 border-t pt-2">
+                      <h4 className="text-sm font-semibold mb-1">Reviews:</h4>
+                      <ul className="space-y-1">
+                        {property.reviews.map((r, i) => (
+                          <li key={i} className="text-sm text-gray-700">
+                            <div className="flex items-center">
+                              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
+                              <span className="font-medium mr-2">
+                                {r.stars}
+                              </span>
+                              <span className="italic">"{r.comment}"</span>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </Link>
+            ))}
+
+            {items.length === 0 && (
+              <p className="text-gray-500">No properties found.</p>
+            )}
+          </div>
+        )}
       </div>
     </section>
   );

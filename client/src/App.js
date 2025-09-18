@@ -10,6 +10,8 @@ const Register = lazy(() => import('./pages/Register/Register'))
 const ForgotPassword = lazy(() => import('./pages/ForgotResetPassword/ForgetPassword'))
 const ResetPassword = lazy(() => import('./pages/ForgotResetPassword/ResetPassword'))
 const ConfirmEmail = lazy(() => import('./pages/Register/ConfirmEmail'))
+const Explore = lazy(() => import('./pages/Explore/Explore'))
+const Details = lazy(() => import('./pages/Details/Details'))
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
             <Route exact path="/forgotPassword" element={<ForgotPassword />} />
             <Route exact path="/resetPassword" element={<ResetPassword />} />
             <Route exact path="/confirmEmail" element={<ConfirmEmail />} />
+            <Route exact path="/explore" element={<Explore />} />
+            <Route path="/details/:id" element={<Details />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Suspense>

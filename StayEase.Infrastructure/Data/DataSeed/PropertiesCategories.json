@@ -1,10 +1,106 @@
 [
-    {
-        "PropertyId": "1",
-        "CategoryId": 1
-    },
-    {
-        "PropertyId": "2",
-        "CategoryId": 2
-    }
+  {
+    "PropertyId": "1",
+    "CategoryId": 4
+  },
+  {
+    "PropertyId": "1",
+    "CategoryId": 5
+  },
+  {
+    "PropertyId": "2",
+    "CategoryId": 1
+  },
+  {
+    "PropertyId": "2",
+    "CategoryId": 3
+  },
+  {
+    "PropertyId": "3",
+    "CategoryId": 4
+  },
+  {
+    "PropertyId": "4",
+    "CategoryId": 1
+  },
+  {
+    "PropertyId": "5",
+    "CategoryId": 3
+  },
+  {
+    "PropertyId": "5",
+    "CategoryId": 2
+  },
+  {
+    "PropertyId": "6",
+    "CategoryId": 4
+  },
+  {
+    "PropertyId": "7",
+    "CategoryId": 1
+  },
+  {
+    "PropertyId": "8",
+    "CategoryId": 1
+  },
+  {
+    "PropertyId": "9",
+    "CategoryId": 2
+  },
+  {
+    "PropertyId": "10",
+    "CategoryId": 3
+  },
+  {
+    "PropertyId": "11",
+    "CategoryId": 4
+  },
+  {
+    "PropertyId": "12",
+    "CategoryId": 1
+  },
+  {
+    "PropertyId": "13",
+    "CategoryId": 1
+  },
+  {
+    "PropertyId": "14",
+    "CategoryId": 4
+  },
+  {
+    "PropertyId": "15",
+    "CategoryId": 5
+  },
+  {
+    "PropertyId": "15",
+    "CategoryId": 1
+  },
+  {
+    "PropertyId": "16",
+    "CategoryId": 1
+  },
+  {
+    "PropertyId": "17",
+    "CategoryId": 2
+  },
+  {
+    "PropertyId": "18",
+    "CategoryId": 1
+  },
+  {
+    "PropertyId": "19",
+    "CategoryId": 1
+  },
+  {
+    "PropertyId": "20",
+    "CategoryId": 2
+  },
+  {
+    "PropertyId": "21",
+    "CategoryId": 1
+  },
+  {
+    "PropertyId": "21",
+    "CategoryId": 5
+  }
 ]

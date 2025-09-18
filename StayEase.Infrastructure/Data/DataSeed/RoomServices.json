@@ -1,10 +1,170 @@
 [
-    {
-        "Description": "Free WiFi",
-        "PropertyId": "1"
-    },
-    {
-        "Description": "24/7 Gym Access",
-        "PropertyId": "2"
-    }
-]  
+  {
+    "Description": "Free WiFi",
+    "PropertyId": "1"
+  },
+  {
+    "Description": "Ocean View Balcony",
+    "PropertyId": "1"
+  },
+  {
+    "Description": "Private Pool",
+    "PropertyId": "2"
+  },
+  {
+    "Description": "24/7 Gym Access",
+    "PropertyId": "2"
+  },
+  {
+    "Description": "Fireplace & Heating",
+    "PropertyId": "3"
+  },
+  {
+    "Description": "Mountain View",
+    "PropertyId": "3"
+  },
+  {
+    "Description": "Private Pool",
+    "PropertyId": "4"
+  },
+  {
+    "Description": "Garden Access",
+    "PropertyId": "4"
+  },
+  {
+    "Description": "Smart TV with Netflix",
+    "PropertyId": "5"
+  },
+  {
+    "Description": "Balcony",
+    "PropertyId": "5"
+  },
+  {
+    "Description": "Free Parking",
+    "PropertyId": "6"
+  },
+  {
+    "Description": "Pet Friendly",
+    "PropertyId": "6"
+  },
+  {
+    "Description": "Ocean View Balcony",
+    "PropertyId": "7"
+  },
+  {
+    "Description": "Fully Equipped Kitchen",
+    "PropertyId": "7"
+  },
+  {
+    "Description": "Ski Equipment Rental",
+    "PropertyId": "8"
+  },
+  {
+    "Description": "Hot Tub",
+    "PropertyId": "8"
+  },
+  {
+    "Description": "Air Conditioning",
+    "PropertyId": "9"
+  },
+  {
+    "Description": "BBQ Area",
+    "PropertyId": "9"
+  },
+  {
+    "Description": "Outdoor BBQ Area",
+    "PropertyId": "10"
+  },
+  {
+    "Description": "Fire Pit",
+    "PropertyId": "10"
+  },
+  {
+    "Description": "Boat Dock Access",
+    "PropertyId": "11"
+  },
+  {
+    "Description": "Lake View",
+    "PropertyId": "11"
+  },
+  {
+    "Description": "Historic Interior Design",
+    "PropertyId": "12"
+  },
+  {
+    "Description": "City Center Location",
+    "PropertyId": "12"
+  },
+  {
+    "Description": "Rooftop Terrace",
+    "PropertyId": "13"
+  },
+  {
+    "Description": "Private Elevator",
+    "PropertyId": "13"
+  },
+  {
+    "Description": "Rustic Barn Kitchen",
+    "PropertyId": "14"
+  },
+  {
+    "Description": "Open Field Access",
+    "PropertyId": "14"
+  },
+  {
+    "Description": "Private Beach Access",
+    "PropertyId": "15"
+  },
+  {
+    "Description": "Hammock",
+    "PropertyId": "15"
+  },
+  {
+    "Description": "Eco-Friendly Amenities",
+    "PropertyId": "16"
+  },
+  {
+    "Description": "Jungle Trek Access",
+    "PropertyId": "16"
+  },
+  {
+    "Description": "Backyard Garden",
+    "PropertyId": "17"
+  },
+  {
+    "Description": "Garage Parking",
+    "PropertyId": "17"
+  },
+  {
+    "Description": "Art Studio",
+    "PropertyId": "18"
+  },
+  {
+    "Description": "Creative Supplies Included",
+    "PropertyId": "18"
+  },
+  {
+    "Description": "Harbor View Balcony",
+    "PropertyId": "19"
+  },
+  {
+    "Description": "Boat Rental",
+    "PropertyId": "19"
+  },
+  {
+    "Description": "Wildlife Tours",
+    "PropertyId": "20"
+  },
+  {
+    "Description": "Forest Hiking Trails",
+    "PropertyId": "20"
+  },
+  {
+    "Description": "Infinity Pool",
+    "PropertyId": "21"
+  },
+  {
+    "Description": "Private Gym",
+    "PropertyId": "21"
+  }
+]

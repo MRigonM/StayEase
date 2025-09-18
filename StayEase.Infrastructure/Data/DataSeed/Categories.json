@@ -1,17 +1,26 @@
 [
-    {
-        "Name": "Luxury"
-    },
-    {
-        "Name": "Budget"
-    },
-    {
-        "Name": "Room"
-    },
-    {
-        "Name": "House"
-    },
-    {
-        "Name": "Island"
-    }
+  {
+    "Name": "Luxury"
+  },
+  {
+    "Name": "Budget"
+  },
+  {
+    "Name": "Room"
+  },
+  {
+    "Name": "House"
+  },
+  {
+    "Name": "Island"
+  },
+  {
+    "Name": "Apartment"
+  },
+  {
+    "Name": "Villa"
+  },
+  {
+    "Name": "Cottage"
+  }
 ]
