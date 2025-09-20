@@ -12,6 +12,7 @@ const ResetPassword = lazy(() => import('./pages/ForgotResetPassword/ResetPasswo
 const ConfirmEmail = lazy(() => import('./pages/Register/ConfirmEmail'))
 const Explore = lazy(() => import('./pages/Explore/Explore'))
 const Details = lazy(() => import('./pages/Details/Details'))
+const Profile = lazy(() => import('./pages/Profile/Profile'))
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route exact path="/confirmEmail" element={<ConfirmEmail />} />
             <Route exact path="/explore" element={<Explore />} />
             <Route path="/details/:id" element={<Details />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Suspense>

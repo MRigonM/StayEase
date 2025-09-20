@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import { loginUser } from '../../authService/AuthService';
+import {jwtDecode} from "jwt-decode";
 
 const LogIn = () => {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -21,6 +23,10 @@ const LogIn = () => {
         console.log('Login result:', result);
 
         if (result.success) {
+              if (result.userName) {
+                localStorage.setItem("userName", result.userName);
+                console.log("UserName:", result.userName);
+            }
             navigate('/');
         } else {
             setError(result.message);

@@ -6,11 +6,12 @@ export const loginUser = async (formData) => {
     const response = await api.post('/Account/Login', formData);
     const { isSuccess, message, data } = response.data;
 
-    if (isSuccess) {
-      const accessToken = data?.accessToken || data?.token;
-      if (accessToken) setTokens(accessToken);
-      return { success: true, message, accessToken };
-    } else {
+   if (isSuccess) {
+  const accessToken = data?.accessToken || data?.token;
+  const userName = data?.userName;   // 👈 shto userName
+  if (accessToken) setTokens(accessToken);
+  return { success: true, message, accessToken, userName };
+}else {
       return { success: false, message };
     }
   } catch (error) {
