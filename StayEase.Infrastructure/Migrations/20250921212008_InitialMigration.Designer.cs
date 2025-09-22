@@ -12,7 +12,7 @@ using StayEase.Infrastructure.Data;
 namespace StayEase.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250916134035_InitialMigration")]
+    [Migration("20250921212008_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -609,13 +609,13 @@ namespace StayEase.Infrastructure.Migrations
                     b.HasOne("StayEase.Domain.Entities.Location", "Location")
                         .WithMany("Properties")
                         .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("StayEase.Domain.Identity.AppUser", "Owner")
                         .WithMany("Properties")
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Location");
@@ -653,7 +653,7 @@ namespace StayEase.Infrastructure.Migrations
                     b.HasOne("StayEase.Domain.Identity.AppUser", "User")
                         .WithMany("Reviews")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Property");
@@ -663,13 +663,13 @@ namespace StayEase.Infrastructure.Migrations
 
             modelBuilder.Entity("StayEase.Domain.Entities.RoomService", b =>
                 {
-                    b.HasOne("StayEase.Domain.Entities.Property", "property")
+                    b.HasOne("StayEase.Domain.Entities.Property", "Property")
                         .WithMany("RoomServices")
                         .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("property");
+                    b.Navigation("Property");
                 });
 
             modelBuilder.Entity("StayEase.Domain.Entities.Category", b =>

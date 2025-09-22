@@ -34,108 +34,83 @@ public class PropertyService : IPropertyService
             var region = await _unitOfWork.Repository<Region, int>().GetByIdAsync(propertyDTO.Region.Id);
             if (region == null)
             {
-                var MappedRegion = new Region()
-                {
-                    Name = propertyDTO.Region.Name
-                };
-
-                await _unitOfWork.Repository<Region, int>().AddAsync(MappedRegion);
-                var IsComplete = await _unitOfWork.CompleteAsync();
-                if (IsComplete <= 0)
-                {
-                    return await Responses.FailurResponse("Region is not valid data!", HttpStatusCode.InternalServerError);
-                }
+                region = new Region { Name = propertyDTO.Region.Name };
+                await _unitOfWork.Repository<Region, int>().AddAsync(region);
+                if (await _unitOfWork.CompleteAsync() <= 0)
+                    return await Responses.FailurResponse("Region is not valid data!",
+                        HttpStatusCode.InternalServerError);
             }
 
             var country = await _unitOfWork.Repository<Country, int>().GetByIdAsync(propertyDTO.Country.Id);
             if (country == null)
             {
-                var MappedCountry = new Country()
-                {
-                    Name = propertyDTO.Country.Name,
-                    RegionId = propertyDTO.Region.Id,
-                };
-
-                await _unitOfWork.Repository<Country, int>().AddAsync(MappedCountry);
-                var IsComplete = await _unitOfWork.CompleteAsync();
-                if (IsComplete <= 0)
-                {
-                    return await Responses.FailurResponse("Country is not valid data!", HttpStatusCode.InternalServerError);
-                }
+                country = new Country { Name = propertyDTO.Country.Name, RegionId = region.Id };
+                await _unitOfWork.Repository<Country, int>().AddAsync(country);
+                if (await _unitOfWork.CompleteAsync() <= 0)
+                    return await Responses.FailurResponse("Country is not valid data!",
+                        HttpStatusCode.InternalServerError);
             }
 
             var location = await _unitOfWork.Repository<Location, int>().GetByIdAsync(propertyDTO.Location.Id);
             if (location == null)
             {
-                var MappedLocation = new Location()
-                {
-                    Name = propertyDTO.Location.Name,
-                    CountryId = propertyDTO.Country.Id
-                };
-
-                await _unitOfWork.Repository<Location, int>().AddAsync(MappedLocation);
-                var IsComplete = await _unitOfWork.CompleteAsync();
-                if (IsComplete <= 0)
-                {
-                    return await Responses.FailurResponse("Location is not valid data!", HttpStatusCode.InternalServerError);
-                }
+                location = new Location { Name = propertyDTO.Location.Name, CountryId = country.Id };
+                await _unitOfWork.Repository<Location, int>().AddAsync(location);
+                if (await _unitOfWork.CompleteAsync() <= 0)
+                    return await Responses.FailurResponse("Location is not valid data!",
+                        HttpStatusCode.InternalServerError);
             }
 
-            string PropertyId = Guid.NewGuid().ToString();
+            string propertyId = Guid.NewGuid().ToString();
 
-            var images = new List<Image>();
-            foreach (var img in propertyDTO.Images)
+            var property = new Property
             {
-                var ImgName = await DocumentSettings.UploadFile(img, SD.Image, "Property");
-                var url = _configuration["BaseUrl"] + $"{ImgName}";
-                var newImage = new Image()
-                {
-                    PropertyId = PropertyId,
-                    Url = url
-                };
-                images.Add(newImage);
-            }
-
-            var roomServices = new List<RoomServicesToCreateDTO>();
-            foreach (var item in propertyDTO.RoomServices)
-            {
-                var RS = new RoomServicesToCreateDTO()
-                {
-                    PropertyId = PropertyId,
-                    Description = item.Description,
-                };
-                roomServices.Add(RS);
-            }
-            var MappedRoomServices = _mapper.Map<ICollection<RoomServicesToCreateDTO>, ICollection<RoomService>>(roomServices);
-
-            var propertyCategories = propertyDTO.Categories
-                .Select(c => new PropertyCategory
-                {
-                    PropertyId = PropertyId,
-                    CategoryId = c.Id
-                }).ToList();
-
-            var MappedProperty = new Property()
-            {
-                Id = PropertyId,
+                Id = propertyId,
                 Name = propertyDTO.Name,
                 Description = propertyDTO.Description,
                 NightPrice = propertyDTO.NightPrice.Value,
                 PlaceType = propertyDTO.PlaceType,
-                Location = location,
-                Owner = owner,
-                RoomServices = MappedRoomServices.ToList(),
-                PropertyCategories = propertyCategories 
+                LocationId = location.Id,
+                Owner = owner
             };
 
-            await _unitOfWork.Repository<Property, string>().AddAsync(MappedProperty);
-            var Result = await _unitOfWork.CompleteAsync();
-            if (Result <= 0) return await Responses.FailurResponse(System.Net.HttpStatusCode.BadRequest);
+            await _unitOfWork.Repository<Property, string>().AddAsync(property);
+            if (await _unitOfWork.CompleteAsync() <= 0)
+                return await Responses.FailurResponse(HttpStatusCode.BadRequest);
+
+            var images = new List<Image>();
+            foreach (var img in propertyDTO.Images)
+            {
+                var imgName = await DocumentSettings.UploadFile(img, SD.Image, "Property");
+                var url = _configuration["BaseUrl"] + $"{imgName}";
+                images.Add(new Image { PropertyId = propertyId, Url = url });
+            }
 
             await _unitOfWork.Repository<Image, int>().AddRangeAsync(images);
+
+            var roomServices = propertyDTO.RoomServices
+                .Select(rs => new RoomService
+                {
+                    PropertyId = propertyId,
+                    Description = rs.Description
+                }).ToList();
+
+            await _unitOfWork.Repository<RoomService, int>().AddRangeAsync(roomServices);
+
+            var propertyCategories = propertyDTO.Categories
+                .Select(c => new PropertyCategory
+                {
+                    PropertyId = propertyId,
+                    CategoryId = c.Id
+                }).ToList();
+
+            await _unitOfWork.Repository<PropertyCategory, int>().AddRangeAsync(propertyCategories);
+
             await _unitOfWork.CompleteAsync();
+
             return await Responses.SuccessResponse("Property has been created successfully!");
         }
+
 
     
         public async Task<Responses> DeletePropertyAsync(string propertyId)

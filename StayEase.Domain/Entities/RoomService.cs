@@ -8,7 +8,7 @@ namespace StayEase.Domain.Entities
 
         [ForeignKey("Property")]
         public string PropertyId { get; set; }
-        public virtual Property property { get; set; }
+        public virtual Property Property { get; set; }
 
     }
 }
