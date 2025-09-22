@@ -49,7 +49,29 @@ namespace StayEase.APIs.Controllers
             }
             return Ok(await Responses.SuccessResponse(_mapper.Map<UserDTO>(user)));
         }
+        
+        [HttpGet("GetUserByUsername/{username}")]
+        public async Task<ActionResult<Responses>> GetUserByUsername([FromRoute] string username)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == username);
+            if (user == null)
+            {
+                return Ok(await Responses.FailurResponse("User Not Found", HttpStatusCode.NotFound));
+            }
+            return Ok(await Responses.SuccessResponse(_mapper.Map<UserDTO>(user)));
+        }
 
+        [HttpGet("GetUserByFullName/{fullName}")]
+        public async Task<ActionResult<Responses>> GetUserByFullName([FromRoute] string fullName)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.FullName == fullName);
+            if (user == null)
+            {
+                return Ok(await Responses.FailurResponse("User Not Found", HttpStatusCode.NotFound));
+            }
+            return Ok(await Responses.SuccessResponse(_mapper.Map<UserDTO>(user)));
+        }
+        
         [HttpDelete("RemoveUser/{Id}")]
         public async Task<ActionResult<Responses>> RemoveUser([FromRoute] string Id)
         {
