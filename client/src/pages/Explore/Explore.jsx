@@ -133,92 +133,103 @@ const Explore = () => {
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-teal-600 to-blue-600 text-white py-16 text-center">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">
-          Explore Properties
-        </h1>
-        <p className="text-lg max-w-2xl mx-auto">
-          Discover unique homes, villas, apartments and more – all around the
-          world. Choose your next stay and start your adventure today!
-        </p>
-      </section>
-
-      {/* Filters */}
-      <div className="container mx-auto px-4 py-6 bg-white shadow-sm rounded-lg -mt-10 relative z-10">
-        <div className="grid md:grid-cols-6 sm:grid-cols-2 gap-4">
-          <div className="flex items-center border rounded-lg px-3 py-2 bg-gray-50">
-            <Search className="h-5 w-5 text-gray-400 mr-2" />
-            <input
-              type="text"
-              placeholder="Search by name..."
-              className="w-full bg-transparent outline-none"
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setPage(1);
-              }}
-            />
-          </div>
-          <input
-            type="text"
-            placeholder="Location"
-            className="border rounded-lg px-3 py-2"
-            value={locationFilter}
-            onChange={(e) => {
-              setLocationFilter(e.target.value);
-              setPage(1);
-            }}
+      <section className="relative h-[33vh] flex items-center justify-center text-center text-white">
+        <div className="absolute inset-0">
+          <img
+              src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1600&q=80"
+              alt="Beautiful property"
+              className="w-full h-full object-cover"
           />
-          <input
-            type="text"
-            placeholder="Type (e.g., Villa)"
-            className="border rounded-lg px-3 py-2"
-            value={typeFilter}
-            onChange={(e) => {
-              setTypeFilter(e.target.value);
-              setPage(1);
-            }}
-          />
-          <input
-            type="number"
-            placeholder="Min Price"
-            className="border rounded-lg px-3 py-2"
-            value={minPrice}
-            onChange={(e) => {
-              setMinPrice(e.target.value);
-              setPage(1);
-            }}
-          />
-          <input
-            type="number"
-            placeholder="Max Price"
-            className="border rounded-lg px-3 py-2"
-            value={maxPrice}
-            onChange={(e) => {
-              setMaxPrice(e.target.value);
-              setPage(1);
-            }}
-          />
-          <select
-            className="border rounded-lg px-3 py-2"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-          >
-            <option value="ratingDesc">Top Rated</option>
-            <option value="ratingAsc">Lowest Rated</option>
-            <option value="priceAsc">Price: Low to High</option>
-            <option value="priceDesc">Price: High to Low</option>
-          </select>
-
-      
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60"></div>
         </div>
 
- 
+        <div className="relative z-10 max-w-3xl px-4">
+          <h1 className="text-4xl md:text-6xl font-extrabold drop-shadow-lg mb-6">
+            Find Your Perfect Stay
+          </h1>
+          <p className="text-lg md:text-xl mb-8">
+            From cozy apartments to luxury villas, discover properties that match your lifestyle anywhere in the world.
+          </p>
+        </div>
+      </section>
 
+      <div className="container mx-auto px-4 py-6 -mt-16 relative z-10">
+        <div className="bg-white shadow-xl rounded-3xl p-8">
+          <div className="grid md:grid-cols-6 sm:grid-cols-2 gap-4">
+
+            <div className="flex items-center bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition">
+              <Search className="h-5 w-5 text-gray-400 mr-2" />
+              <input
+                  type="text"
+                  placeholder="Search by name..."
+                  className="w-full bg-transparent outline-none placeholder-gray-400 text-sm"
+                  value={search}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    setPage(1);
+                  }}
+              />
+            </div>
+
+            <input
+                type="text"
+                placeholder="Location"
+                className="border border-gray-200 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition placeholder-gray-400 text-sm"
+                value={locationFilter}
+                onChange={(e) => {
+                  setLocationFilter(e.target.value);
+                  setPage(1);
+                }}
+            />
+
+            <input
+                type="text"
+                placeholder="Type (e.g., Villa)"
+                className="border border-gray-200 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition placeholder-gray-400 text-sm"
+                value={typeFilter}
+                onChange={(e) => {
+                  setTypeFilter(e.target.value);
+                  setPage(1);
+                }}
+            />
+
+            <input
+                type="number"
+                placeholder="Min Price"
+                className="border border-gray-200 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition placeholder-gray-400 text-sm"
+                value={minPrice}
+                onChange={(e) => {
+                  setMinPrice(e.target.value);
+                  setPage(1);
+                }}
+            />
+
+            <input
+                type="number"
+                placeholder="Max Price"
+                className="border border-gray-200 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition placeholder-gray-400 text-sm"
+                value={maxPrice}
+                onChange={(e) => {
+                  setMaxPrice(e.target.value);
+                  setPage(1);
+                }}
+            />
+
+            <select
+                className="border border-gray-200 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition text-sm"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+            >
+              <option value="ratingDesc">Top Rated</option>
+              <option value="ratingAsc">Lowest Rated</option>
+              <option value="priceAsc">Price: Low to High</option>
+              <option value="priceDesc">Price: High to Low</option>
+            </select>
+          </div>
+        </div>
       </div>
 
-      {/* Properties Section */}
+
       <main className="flex-1 container mx-auto px-4 py-12">
         {loading && <p className="text-gray-500">Loading properties…</p>}
         {err && <p className="text-red-600">Error: {err}</p>}
@@ -280,7 +291,6 @@ const Explore = () => {
               ))}
             </div>
 
-            {/* Pagination */}
             {totalPages > 1 && (
               <div className="flex justify-center mt-10 space-x-2">
                 <button
@@ -320,7 +330,6 @@ const Explore = () => {
         )}
       </main>
 
-      {/* Footer */}
       <footer className="bg-gray-100 py-6 mt-12 border-t">
         <div className="container mx-auto px-4 text-center text-gray-600 text-sm">
           © {new Date().getFullYear()} StayEase. All rights reserved.
