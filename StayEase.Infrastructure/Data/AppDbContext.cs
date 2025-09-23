@@ -14,88 +14,47 @@ public class AppDbContext : IdentityDbContext<AppUser>
     protected override void OnModelCreating(ModelBuilder builder)
         {
 
-            builder.Entity<Property>(P =>
+            builder.Entity<Property>(p =>
             {
-                P.Property(p => p.Id).ValueGeneratedNever();
+                p.Property(prop => prop.Id).ValueGeneratedNever();
 
-                #region Done
-                P.HasMany(B => B.Bookings)
-               .WithOne(P => P.Property)
-               .HasForeignKey(P => P.PropertyId)
-               .OnDelete(DeleteBehavior.Cascade);
+                p.HasMany(prop => prop.Bookings)
+                    .WithOne(b => b.Property)
+                    .HasForeignKey(b => b.PropertyId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
-                #endregion
-                P.HasMany(i => i.Images)
-                .WithOne(p => p.Property)
-                .HasForeignKey(p => p.PropertyId)
-                .OnDelete(DeleteBehavior.Cascade);
+                p.HasMany(prop => prop.Images)
+                    .WithOne(i => i.Property)
+                    .HasForeignKey(i => i.PropertyId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
-                P.HasMany(i => i.RoomServices)
-                .WithOne(p => p.property)
-                .HasForeignKey(p => p.PropertyId)
-                .OnDelete(DeleteBehavior.Cascade);
+                p.HasMany(prop => prop.RoomServices)
+                    .WithOne(rs => rs.Property) 
+                    .HasForeignKey(rs => rs.PropertyId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
-                P.HasMany(i => i.Reviews)
-                .WithOne(p => p.Property)
-                .HasForeignKey(p => p.PropertyId)
-                .OnDelete(DeleteBehavior.Cascade);
+                p.HasMany(prop => prop.Reviews)
+                    .WithOne(r => r.Property)
+                    .HasForeignKey(r => r.PropertyId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
-                P.HasOne(O => O.Owner)
-                .WithMany(p => p.Properties)
-                .HasForeignKey(o => o.OwnerId)
-                .OnDelete(DeleteBehavior.Cascade);
-
+                p.HasOne(prop => prop.Owner)
+                    .WithMany(u => u.Properties)
+                    .HasForeignKey(prop => prop.OwnerId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
-            builder.Entity<AppUser>(U =>
+            builder.Entity<PropertyCategory>(pc =>
             {
-                U.HasMany(p => p.Properties)
-                     .WithOne(u => u.Owner)
-                     .HasForeignKey(f => f.OwnerId)
-                     .OnDelete(DeleteBehavior.Restrict);
+                pc.HasOne(pc => pc.Property)
+                    .WithMany(p => p.PropertyCategories)
+                    .HasForeignKey(pc => pc.PropertyId);
 
-                U.HasMany(p => p.Reviews)
-                     .WithOne(u => u.User)
-                     .HasForeignKey(f => f.UserId)
-                     .OnDelete(DeleteBehavior.Restrict);
-
-                U.HasMany(p => p.Bookings)
-                     .WithOne(u => u.User)
-                     .HasForeignKey(f => f.UserId)
-                     .OnDelete(DeleteBehavior.Cascade);
-
+                pc.HasOne(pc => pc.Category)    // ✅ added
+                    .WithMany(c => c.PropertyCategories)
+                    .HasForeignKey(pc => pc.CategoryId);
             });
 
-            builder.Entity<Location>(L =>
-            {
-                L.HasMany(p => p.Properties)
-                .WithOne(l => l.Location)
-                .HasForeignKey(l => l.LocationId)
-                .OnDelete(DeleteBehavior.Restrict);
-            });
-
-            builder.Entity<Country>(C =>
-                        {
-                            C.HasMany(l => l.Locations)
-                            .WithOne(c => c.Country)
-                            .HasForeignKey(c => c.CountryId)
-                            .OnDelete(DeleteBehavior.Cascade);
-                        });
-
-            builder.Entity<Region>(L =>
-            {
-                L.HasMany(C => C.Countries)
-                .WithOne(R => R.Region)
-                .HasForeignKey(R => R.RegionId)
-                .OnDelete(DeleteBehavior.Cascade);
-            });
-
-            builder.Entity<PropertyCategory>(PC =>
-            {
-                PC.HasOne(PC => PC.Property)
-                  .WithMany(P => P.PropertyCategories)
-                  .HasForeignKey(PC => PC.PropertyId);
-            });
             base.OnModelCreating(builder);
         }
     

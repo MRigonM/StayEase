@@ -8,7 +8,7 @@ export const loginUser = async (formData) => {
 
    if (isSuccess) {
   const accessToken = data?.accessToken || data?.token;
-  const userName = data?.userName;   // 👈 shto userName
+  const userName = data?.userName;
   if (accessToken) setTokens(accessToken);
   return { success: true, message, accessToken, userName };
 }else {
@@ -25,7 +25,7 @@ export const forgetPassword = async (email) => {
   try {
     const response = await api.post("/Account/ForgetPassword", { email });
     const { isSuccess, message, data } = response.data;
-    return { success: isSuccess, message, data }; // data = token
+    return { success: isSuccess, message, data };
   } catch (error) {
     const msg = error.response?.data?.message || "Failed to send reset email";
     return { success: false, message: msg };
