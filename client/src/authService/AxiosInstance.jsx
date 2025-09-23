@@ -3,7 +3,6 @@
 
     const api = axios.create({
       baseURL: 'https://localhost:5000/api',
-      withCredentials: true,
     });
 
     api.interceptors.request.use((config) => {
