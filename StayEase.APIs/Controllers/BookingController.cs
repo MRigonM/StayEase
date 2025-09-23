@@ -35,7 +35,7 @@ namespace StayEase.APIs.Controllers
             var email = User.FindFirstValue(ClaimTypes.Email);
             if (email is null)
             {
-                return await Responses.FailurResponse("email is not found try again");
+                return await Responses.FailurResponse("Email is not found try again");
             }
 
             return Ok(await _bookService.CreateBookingByPropertyId(email, bookDTO));

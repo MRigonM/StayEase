@@ -48,6 +48,22 @@ const Details = () => {
     return d.toISOString();
   };
 
+
+  const getNights = () => {
+    if (!startDate || !endDate) return 2;
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const diffTime = end - start;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays > 0 ? diffDays : 1;
+  };
+
+  const calculateTotalPrice = () => {
+    const nights = getNights();
+    return property ? property.nightPrice * nights : 0;
+  };
+
+
   const openModal = () => {
     setBookError(null);
     setBookSuccess(null);
@@ -55,9 +71,6 @@ const Details = () => {
     setEndDate("");
     setShowModal(true);
   };
-
-  const closeModal = () => setShowModal(false);
-
   const submitBooking = async (e) => {
     e.preventDefault();
     setBookError(null);
@@ -110,21 +123,20 @@ const Details = () => {
       <>
         <Navbar />
         <div className="container mx-auto px-4 py-8">
-          <Link to="/explore" className="text-teal-600 hover:underline mb-4 inline-block">
+          <Link to="/explore" className="text-teal-600 hover:underline mb-6 inline-block">
             ← Back to Explore
           </Link>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-10">
             <div>
               <img
-                  src={
-                    property.imageUrls?.length > 0
-                        ? `https://localhost:5000/${property.imageUrls[currentImage]}`
-                        : "https://placehold.co/600x400/png"
-                  }
+                  src={property.imageUrls?.length > 0
+                      ? `https://localhost:5000/${property.imageUrls[currentImage]}`
+                      : "https://placehold.co/1200x800/png"}
                   alt={property.name}
-                  className="w-full h-80 md:h-96 object-cover rounded-xl shadow-lg mb-4"
+                  className="w-full h-[450px] md:h-[450px] object-cover rounded-xl shadow-lg mb-4"
               />
+
               <div className="flex gap-2 overflow-x-auto">
                 {property.imageUrls?.map((img, idx) => (
                     <img
@@ -142,7 +154,7 @@ const Details = () => {
 
             {/* Info */}
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold mb-3">{property.name}</h1>
+              <h1 className="text-3xl md:text-5xl font-bold mb-3">{property.name}</h1>
               <p className="text-gray-600 mb-4">{property.description}</p>
 
               <div className="flex items-center mb-4">
@@ -159,45 +171,75 @@ const Details = () => {
               </span>
                 <span className="text-gray-500 ml-2">({property.reviews?.length || 0} reviews)</span>
               </div>
-
-              <div className="text-2xl md:text-3xl font-bold text-teal-700 mb-6">
-                ${property.nightPrice} <span className="text-gray-500 text-base">/ night</span>
-              </div>
-
-              <div className="my-6">
-                <button
-                    onClick={openModal}
-                    className="w-80 py-2 md:py-3 text-lg font-semibold bg-teal-600 text-white rounded-xl shadow hover:bg-teal-700 transition duration-300"
-                >
-                  Book Now
-                </button>
-              </div>
-
-              <div className="mb-4">
-                <h3 className="font-semibold mb-2">Categories</h3>
-                <div className="flex gap-2 flex-wrap">
-                  {property.categories?.map((c, i) => (
-                      <span key={i} className="px-3 py-1 bg-teal-100 text-teal-700 text-sm rounded-full">
+              <div className="my-3">
+                <div className="mb-4">
+                  <h3 className="font-semibold mb-2">Categories</h3>
+                  <div className="flex gap-2 flex-wrap">
+                    {property.categories?.map((c, i) => (
+                        <span key={i} className="px-3 py-1 bg-teal-100 text-teal-700 text-sm rounded-full">
                     {c.name}
                   </span>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              {/* Room Services */}
-              <div>
-                <h3 className="font-semibold mb-2">Room Services</h3>
-                <ul className="list-disc list-inside text-gray-700">
-                  {property.roomServices?.map((s, i) => (
-                      <li key={i}>{s.description}</li>
-                  ))}
-                </ul>
+                <div>
+                  <h3 className="font-semibold mb-2">Room Services</h3>
+                  <ul className="list-disc list-inside text-gray-700">
+                    {property.roomServices?.map((s, i) => (
+                        <li key={i}>{s.description}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 w-full max-w-md my-6">
+                  {/* Price */}
+                  <div className="text-2xl md:text-2xl font-bold mb-4">
+                    €{calculateTotalPrice()} <span className="text-gray-500 text-base">{getNights()} nights</span>
+                  </div>
+
+                  <form onSubmit={submitBooking} className="space-y-4">
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label className="block text-xs font-medium mb-1">Check-in</label>
+                        <input
+                            type="date"
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                            className="w-full border px-2 py-2 rounded-lg"
+                            min={new Date().toISOString().split("T")[0]}
+                            required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium mb-1">Check-out</label>
+                        <input
+                            type="date"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                            className="w-full border px-3 py-2 rounded-lg"
+                            min={startDate || new Date().toISOString().split("T")[0]}
+                            required
+                        />
+                      </div>
+                    </div>
+                    {bookError && <p className="text-red-600 font-bold">{bookError}</p>}
+                    {bookSuccess && <p className="text-green-600 font-bold">{bookSuccess}</p>}
+
+                    <button
+                        type="submit"
+                        className="w-full bg-teal-600 text-white py-3 rounded-xl text-lg font-semibold hover:bg-teal-700 transition"
+                        disabled={submitting}
+                    >
+                      {submitting ? "Reserving..." : "Reserve"}
+                    </button>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
 
           {property.reviews?.length > 0 && (
-              <div className="mt-10">
+              <div className="mt-3">
                 <h2 className="text-2xl font-bold mb-4">Reviews</h2>
                 <div className="space-y-4">
                   {property.reviews.map((r, i) => (
@@ -213,68 +255,6 @@ const Details = () => {
               </div>
           )}
         </div>
-
-        {showModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center">
-              <div
-                  className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-                  onClick={closeModal}
-                  aria-hidden
-              />
-              <form
-                  onSubmit={submitBooking}
-                  className="relative z-10 bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 md:p-8 transform transition-all duration-300 scale-100"
-                  onClick={(e) => e.stopPropagation()}
-              >
-                <h3 className="text-2xl font-semibold mb-4">Book: {property.name}</h3>
-
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-1">Start date</label>
-                  <input
-                      type="date"
-                      value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
-                      className="w-full border px-3 py-2 rounded-lg"
-                      min={new Date().toISOString().split("T")[0]}
-                      required
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-1">End date</label>
-                  <input
-                      type="date"
-                      value={endDate}
-                      onChange={(e) => setEndDate(e.target.value)}
-                      className="w-full border px-3 py-2 rounded-lg"
-                      min={startDate || new Date().toISOString().split("T")[0]}
-                      required
-                  />
-                </div>
-
-                {bookError && <p className="text-red-600 mb-3">{bookError}</p>}
-                {bookSuccess && <p className="text-green-600 mb-3">{bookSuccess}</p>}
-
-                <div className="flex justify-end gap-4">
-                  <button
-                      type="button"
-                      onClick={closeModal}
-                      className="px-4 py-2 rounded-lg border hover:bg-gray-100"
-                      disabled={submitting}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                      type="submit"
-                      className="px-4 py-2 rounded-lg bg-teal-600 text-white font-semibold hover:bg-teal-700 transition"
-                      disabled={submitting}
-                  >
-                    {submitting ? "Booking..." : "Confirm Booking"}
-                  </button>
-                </div>
-              </form>
-            </div>
-        )}
       </>
   );
   

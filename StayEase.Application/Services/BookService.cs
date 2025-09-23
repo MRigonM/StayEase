@@ -32,10 +32,10 @@ namespace StayEase.Application.Services
             if (property == null) return await Responses.FailurResponse("Property not found!");
 
             bool isAvailable = await _unitOfWork.Repository<Booking, int>().CheckAvailabilityAsync(b => b.PropertyId == property.Id, bookDTO.StartDate, bookDTO.EndDate);
-            if(!isAvailable) return await Responses.FailurResponse("please check another date, property isn't availabe at this time!");
+            if(!isAvailable) return await Responses.FailurResponse("Please check another date, property isn't available at this time!");
 
             var user = await _userManager.FindByEmailAsync(email);
-            if (user is null) return await Responses.FailurResponse("please login to proccess!");
+            if (user is null) return await Responses.FailurResponse("Please Login to Process!");
 
             var totalPrice = (bookDTO.EndDate.Day - bookDTO.StartDate.Day) * property.NightPrice;
 
@@ -62,7 +62,7 @@ namespace StayEase.Application.Services
         public async Task<Responses> DeleteBookingById(int bookingId)
         {
             var booking = await _unitOfWork.Repository<Booking, int>().GetByIdAsync(bookingId);
-            if (booking == null) return await Responses.FailurResponse("this book is not found or there is error!");
+            if (booking == null) return await Responses.FailurResponse("This book is not found or there is error!");
             // implement refund money if the date not passed yet
             _unitOfWork.Repository<Booking, int>().Remove(booking);
             var Result = await _unitOfWork.CompleteAsync();
@@ -73,7 +73,7 @@ namespace StayEase.Application.Services
         public async Task<Responses> GetBookingById(int bookingId)
         {
             var booking = await _unitOfWork.Repository<Booking, int>().GetByIdAsync(bookingId);
-            if (booking == null) return await Responses.FailurResponse("this book is not found or there is error!");
+            if (booking == null) return await Responses.FailurResponse("This book is not found or there is error!");
             var MappedBooking = _mapper.Map<Booking, BookingDto>(booking);
             return await Responses.SuccessResponse(MappedBooking);
         }
@@ -81,7 +81,7 @@ namespace StayEase.Application.Services
         public async Task<Responses> GetBookingsByUserId(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-            if (user is null) return await Responses.FailurResponse("please login to proccess!");
+            if (user is null) return await Responses.FailurResponse("Please Login to Process!");
             var spec = new BookingSpecifications(user.Id);
             var bookings = await _unitOfWork.Repository<Booking, int>().GetAllWithSpecAsync(spec);
             if(bookings is null) return await Responses.FailurResponse("There is no booking for you!");
@@ -92,10 +92,10 @@ namespace StayEase.Application.Services
         public async Task<Responses> UpdateBookingByPropertyId(int bookingId, BookingToUpdateDTO bookDto)
         {
             var booking = await _unitOfWork.Repository<Booking, int>().GetByIdAsync(bookingId);
-            if (booking is null) return await Responses.FailurResponse("There is no bookgin with this id");
+            if (booking is null) return await Responses.FailurResponse("There is no Booking with this id");
 
             bool isAvailable = await _unitOfWork.Repository<Booking, int>().CheckAvailabilityAsync(b => b.PropertyId == booking.PropertyId && b.Id != bookingId, booking.StartDate, booking.EndDate);
-            if (!isAvailable) return await Responses.FailurResponse("please check another date, property isn't availabe at this time!");
+            if (!isAvailable) return await Responses.FailurResponse("Please check another date, property isn't available at this time!");
 
             var totalPrice = (bookDto.EndDate.Day - bookDto.StartDate.Day) * booking.Property.NightPrice;
             booking.StartDate = bookDto.StartDate;
