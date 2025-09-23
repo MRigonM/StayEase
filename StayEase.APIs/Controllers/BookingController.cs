@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using System.Security.Claims;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StayEase.Domain;
 using StayEase.Domain.DataTransferObjects.Booking;
@@ -22,7 +24,7 @@ namespace StayEase.APIs.Controllers
             _bookingToCreateValidator = bookingToCreateValidator;
             _paymentService = paymentService;
         }
-        //[Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("CreateBooking")]
         public async Task<ActionResult<Responses>> CreateBooking([FromBody] BookingToCreateDTO bookDTO)
         {
@@ -33,7 +35,7 @@ namespace StayEase.APIs.Controllers
             var email = User.FindFirstValue(ClaimTypes.Email);
             if (email is null)
             {
-                return await Responses.FailurResponse("email is not found try again");
+                return await Responses.FailurResponse("Email is not found try again");
             }
 
             return Ok(await _bookService.CreateBookingByPropertyId(email, bookDTO));
