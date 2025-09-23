@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Betalgo.OpenAI.GPT3" Version="6.8.4" />
         <PackageReference Include="FluentValidation" Version="11.9.2" />
         <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.8" />
@@ -17,6 +18,8 @@
         </PackageReference>
         <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.10" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="OpenAI" Version="2.1.0" />
+        <PackageReference Include="OpenAI.Client" Version="0.2.0" />
         <PackageReference Include="StackExchange.Redis" Version="2.8.16" />
         <PackageReference Include="Stripe.net" Version="48.3.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
