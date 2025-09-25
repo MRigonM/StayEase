@@ -20,7 +20,49 @@ const Details = () => {
   const [bookError, setBookError] = useState(null);
   const [bookSuccess, setBookSuccess] = useState(null);
 
+  const [reviewComment, setReviewComment] = useState("");
+const [reviewStars, setReviewStars] = useState(0);
+const [reviewError, setReviewError] = useState(null);
+const [reviewSuccess, setReviewSuccess] = useState(null);
+const [submittingReview, setSubmittingReview] = useState(false);
+
   const [currentImage, setCurrentImage] = useState(0);
+
+
+  const submitReview = async (e) => {
+  e.preventDefault();
+  setReviewError(null);
+  setReviewSuccess(null);
+
+  if (!reviewComment || reviewStars <= 0) {
+    setReviewError("Please provide a comment and select stars.");
+    return;
+  }
+
+  const payload = {
+    comment: reviewComment,
+    stars: reviewStars,
+    propertyId: String(id), // id nga URL (location.id)
+  };
+
+  try {
+    setSubmittingReview(true);
+    const res = await api.post("/Review/AddReview", payload);
+    if (res?.data?.isSuccess) {
+      setReviewSuccess(res.data.message || "Review added!");
+      setReviewComment("");
+      setReviewStars(0);
+    } else {
+      setReviewError(res?.data?.message || "Failed to add review.");
+    }
+  } catch (err) {
+    const serverMsg = err?.response?.data?.message || err.message;
+    setReviewError(serverMsg);
+  } finally {
+    setSubmittingReview(false);
+  }
+};
+
 
   useEffect(() => {
     (async () => {
@@ -28,7 +70,10 @@ const Details = () => {
         setLoading(true);
         const res = await fetch(API_URL, { headers: { Accept: "application/json" } });
         const json = await res.json();
-        const selected = json.data.find((_, idx) => String(idx) === id);
+        const selected = json.data.find(
+  (p) => String(p.location?.id) === String(id)
+);
+
         setProperty(selected);
       } catch (err) {
         console.error("Error loading property:", err);
@@ -254,6 +299,49 @@ const Details = () => {
                 </div>
               </div>
           )}
+
+          <div className="mt-8">
+  <h2 className="text-2xl font-bold mb-4">Add a Review</h2>
+  <form onSubmit={submitReview} className="space-y-4 bg-white p-6 rounded-xl shadow-md">
+    <div>
+      <label className="block text-sm font-medium mb-1">Your Comment</label>
+      <textarea
+        value={reviewComment}
+        onChange={(e) => setReviewComment(e.target.value)}
+        className="w-full border px-3 py-2 rounded-lg"
+        rows="3"
+        required
+      />
+    </div>
+
+    <div>
+      <label className="block text-sm font-medium mb-1">Stars</label>
+      <div className="flex gap-2">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <Star
+            key={star}
+            className={`h-6 w-6 cursor-pointer ${
+              reviewStars >= star ? "fill-yellow-400 text-yellow-400" : "text-gray-400"
+            }`}
+            onClick={() => setReviewStars(star)}
+          />
+        ))}
+      </div>
+    </div>
+
+    {reviewError && <p className="text-red-600 font-bold">{reviewError}</p>}
+    {reviewSuccess && <p className="text-green-600 font-bold">{reviewSuccess}</p>}
+
+    <button
+      type="submit"
+      className="bg-teal-600 text-white py-2 px-6 rounded-lg hover:bg-teal-700 transition"
+      disabled={submittingReview}
+    >
+      {submittingReview ? "Submitting..." : "Submit Review"}
+    </button>
+  </form>
+</div>
+
         </div>
       </>
   );
