@@ -23,7 +23,6 @@ export function FeaturedProperties() {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
         const json = await res.json();
-        console.log("API RESPONSE:", json);
 
         const mapped = json.data.map((p, idx) => {
           // Llogarit rating mesatar nga reviews

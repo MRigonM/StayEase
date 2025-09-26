@@ -69,6 +69,7 @@ public class MappingProfiles : Profile
                 .ForMember(dest => dest.PlaceType, opt => opt.MapFrom(src => src.PlaceType));
 
             CreateMap<Booking, BookingDto>()
+                .ForMember(dest => dest.PropertyId, opt => opt.MapFrom(src => src.PropertyId))
                 .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.TotalPrice))
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate))
