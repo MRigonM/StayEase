@@ -59,13 +59,16 @@ const [submittingReview, setSubmittingReview] = useState(false);
         setReviewError(result?.message || "Failed to add review.");
       }
     } catch (err) {
-      const serverMsg = err?.response?.data?.result?.message || err.message;
-      setReviewError(serverMsg);
+      if (err?.response?.status === 401) {
+        setReviewError("You must be logged in to add Review. Please login and try again.");
+      } else {
+        const serverMsg = err?.response?.data?.result?.message || err.message;
+        setReviewError(serverMsg);
+      }
     } finally {
       setSubmittingReview(false);
     }
   };
-
 
   useEffect(() => {
     (async () => {
