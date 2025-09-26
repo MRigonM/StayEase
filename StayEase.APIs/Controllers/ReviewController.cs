@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using StayEase.Domain;
 using StayEase.Domain.DataTransferObjects.Property;
@@ -31,6 +33,7 @@ namespace StayEase.APIs.Controllers
             return NotFound(await Responses.FailurResponse($"Review with ID {id} not found."));
         }
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("AddReview")]
         public async Task<IActionResult> AddReview([FromBody] ReviewDTO review)
         {

@@ -15,6 +15,7 @@
     }
     public class BookingDto
     {
+        public string PropertyId { get; set; }
         public decimal TotalPrice { get; set; }
         public DateTimeOffset StartDate { get; set; }
         public DateTimeOffset EndDate { get; set; }

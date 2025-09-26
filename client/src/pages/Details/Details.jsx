@@ -30,38 +30,41 @@ const [submittingReview, setSubmittingReview] = useState(false);
 
 
   const submitReview = async (e) => {
-  e.preventDefault();
-  setReviewError(null);
-  setReviewSuccess(null);
+    e.preventDefault();
+    setReviewError(null);
+    setReviewSuccess(null);
 
-  if (!reviewComment || reviewStars <= 0) {
-    setReviewError("Please provide a comment and select stars.");
-    return;
-  }
-
-  const payload = {
-    comment: reviewComment,
-    stars: reviewStars,
-    propertyId: String(id), // id nga URL (location.id)
-  };
-
-  try {
-    setSubmittingReview(true);
-    const res = await api.post("/Review/AddReview", payload);
-    if (res?.data?.isSuccess) {
-      setReviewSuccess(res.data.message || "Review added!");
-      setReviewComment("");
-      setReviewStars(0);
-    } else {
-      setReviewError(res?.data?.message || "Failed to add review.");
+    if (!reviewComment || reviewStars <= 0) {
+      setReviewError("Please provide a comment and select stars.");
+      return;
     }
-  } catch (err) {
-    const serverMsg = err?.response?.data?.message || err.message;
-    setReviewError(serverMsg);
-  } finally {
-    setSubmittingReview(false);
-  }
-};
+
+    const payload = {
+      comment: reviewComment,
+      stars: reviewStars,
+      propertyId: String(id),
+    };
+
+    try {
+      setSubmittingReview(true);
+      const res = await api.post("/Review/AddReview", payload);
+
+      const result = res?.data?.result;
+
+      if (result?.isSuccess) {
+        setReviewSuccess(result.message || "Review added!");
+        setReviewComment("");
+        setReviewStars(0);
+      } else {
+        setReviewError(result?.message || "Failed to add review.");
+      }
+    } catch (err) {
+      const serverMsg = err?.response?.data?.result?.message || err.message;
+      setReviewError(serverMsg);
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
 
 
   useEffect(() => {
@@ -71,7 +74,7 @@ const [submittingReview, setSubmittingReview] = useState(false);
         const res = await fetch(API_URL, { headers: { Accept: "application/json" } });
         const json = await res.json();
         const selected = json.data.find(
-  (p) => String(p.location?.id) === String(id)
+  (p) => String(p.id) === String(id)
 );
 
         setProperty(selected);
