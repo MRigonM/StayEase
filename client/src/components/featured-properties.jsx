@@ -4,6 +4,13 @@ import React, { useState, useEffect } from "react";
 import { Star, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 
+// import Swiper
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
 const API_URL = "https://localhost:5000/api/Property/GetProperties";
 
 export function FeaturedProperties() {
@@ -24,8 +31,7 @@ export function FeaturedProperties() {
 
         const json = await res.json();
 
-        const mapped = json.data.map((p, idx) => {
-          // Llogarit rating mesatar nga reviews
+        const mapped = json.data.map((p) => {
           let avgRating = 0;
           if (p.reviews && p.reviews.length > 0) {
             avgRating =
@@ -34,11 +40,11 @@ export function FeaturedProperties() {
           }
 
           return {
-            id: idx,
+            id: p.id,
             title: p.name,
             description: p.description,
             price: p.nightPrice,
-            rating: avgRating,
+            rating: avgRating.toFixed(1),
             reviews: p.reviews || [],
             image:
               p.imageUrls && p.imageUrls.length > 0
@@ -53,14 +59,9 @@ export function FeaturedProperties() {
           };
         });
 
-        // Sorto sipas rating dhe merre top 10
         const topTen = mapped
           .sort((a, b) => b.rating - a.rating)
-          .slice(0, 10)
-          .map((p) => ({
-            ...p,
-            rating: p.rating.toFixed(1),
-          }));
+          .slice(0, 10);
 
         setItems(topTen);
       } catch (e) {
@@ -73,7 +74,7 @@ export function FeaturedProperties() {
 
   return (
     <section className="py-16 md:py-24">
-      <div className="container mx-auto px-4 md:px-6">
+      <div className="container mx-auto px-4 md:px-6 relative">
         <h2 className="text-3xl md:text-4xl font-bold mb-8">
           Top 10 Properties
         </h2>
@@ -82,88 +83,105 @@ export function FeaturedProperties() {
         {err && <p className="text-red-600">Error: {err}</p>}
 
         {!loading && !err && (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <Swiper
+            modules={[Navigation, Pagination]}
+            spaceBetween={20}
+            slidesPerView={1}
+            navigation
+            pagination={{ clickable: true }}
+            breakpoints={{
+              640: { slidesPerView: 1 },
+              768: { slidesPerView: 2 },
+              1024: { slidesPerView: 3 },
+              1280: { slidesPerView: 4 },
+            }}
+          >
             {items.map((property) => (
-              <Link
-              to={`/details/${property.id}`}
-                key={property.id}
-                className="rounded-xl overflow-hidden border hover:shadow-lg transition-shadow"
-              >
-                <div className="relative h-[200px] w-full">
-                  <img
-                    src={property.image}
-                    alt={property.title}
-                    className="w-full h-full object-cover"
-                  />
-                  {property.tags.length > 0 && (
-                    <div className="absolute top-3 left-3 flex gap-2">
-                      {property.tags.map((tag, index) => (
-                        <span
-                          key={index}
-                          className="px-2 py-1 text-xs font-medium bg-white/80 text-black rounded"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <div className="p-4">
-                  <div className="flex items-center text-sm text-gray-500 mb-2">
-                    <MapPin className="h-4 w-4 mr-1 text-teal-600" />
-                    {property.location}
-                  </div>
-                  <h3 className="font-bold text-lg mb-2 line-clamp-1">
-                    {property.title}
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-                    {property.description}
-                  </p>
-
-                  {/* Rating kryesor */}
-                  <div className="flex justify-between items-center mb-3">
-                    <div className="flex items-center">
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
-                      <span className="font-medium">{property.rating}</span>
-                      <span className="text-gray-500 ml-1">
-                        ({property.reviews.length})
-                      </span>
-                    </div>
-                    <div>
-                      <span className="font-bold">${property.price}</span>
-                      <span className="text-gray-500"> / night</span>
-                    </div>
-                  </div>
-
-                  {/* Komentet nga reviews */}
-                  {property.reviews.length > 0 && (
-                    <div className="mt-3 border-t pt-2">
-                      <h4 className="text-sm font-semibold mb-1">Reviews:</h4>
-                      <ul className="space-y-1">
-                        {property.reviews.map((r, i) => (
-                          <li key={i} className="text-sm text-gray-700">
-                            <div className="flex items-center">
-                              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
-                              <span className="font-medium mr-2">
-                                {r.stars}
-                              </span>
-                              <span className="italic">"{r.comment}"</span>
-                            </div>
-                          </li>
+              <SwiperSlide key={property.id}>
+                <Link
+                  to={`/details/${property.id}`}
+                  className="rounded-xl overflow-hidden bg-white border shadow-sm hover:shadow-lg transition-shadow flex flex-col h-full"
+                >
+                  <div className="relative h-48 w-full">
+                    <img
+                      src={property.image}
+                      alt={property.title}
+                      className="w-full h-full object-cover"
+                    />
+                    {property.tags.length > 0 && (
+                      <div className="absolute top-3 left-3 flex gap-2">
+                        {property.tags.map((tag, i) => (
+                          <span
+                            key={i}
+                            className="px-2 py-1 text-xs font-medium bg-white/90 text-gray-800 rounded"
+                          >
+                            {tag}
+                          </span>
                         ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              </Link>
-            ))}
+                      </div>
+                    )}
+                  </div>
 
-            {items.length === 0 && (
-              <p className="text-gray-500">No properties found.</p>
-            )}
-          </div>
+                  <div className="p-4 flex flex-col flex-1">
+                    <div className="flex items-center text-sm text-gray-500 mb-2">
+                      <MapPin className="h-4 w-4 mr-1 text-teal-600" />
+                      {property.location}
+                    </div>
+                    <h3 className="font-bold text-lg mb-2 line-clamp-1">
+                      {property.title}
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-3 flex-1 line-clamp-2">
+                      {property.description}
+                    </p>
+
+                    <div className="flex justify-between items-center mt-auto">
+                      <div className="flex items-center">
+                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
+                        <span className="font-medium">{property.rating}</span>
+                        <span className="text-gray-500 ml-1">
+                          ({property.reviews.length})
+                        </span>
+                      </div>
+                      <div>
+                        <span className="font-bold">€{property.price}</span>
+                        <span className="text-gray-500"> / night</span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        )}
+
+        {items.length === 0 && !loading && (
+          <p className="text-gray-500">No properties found.</p>
         )}
       </div>
+
+      {/* Custom CSS për shigjetat */}
+     <style jsx global>{`
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: #ef4444 !important; /* ngjyra e kuqe */
+    width: 40px;
+    height: 40px;
+    top: 50% !important;
+    transform: translateY(-50%);
+  }
+
+
+  /* Pikat e pagination */
+  .swiper-pagination-bullet {
+    background: #ef4444 !important; /* kuqe për pikat */
+    opacity: 0.4;
+  }
+
+  .swiper-pagination-bullet-active {
+    background: #ef4444 !important; /* kuqe për pikën aktive */
+    opacity: 1;
+  }
+`}</style>
     </section>
   );
 }

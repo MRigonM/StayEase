@@ -2,6 +2,7 @@ import './App.css';
 import './index.css';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import Layout from './Layout/Layout';
 
 
 const Home = lazy(() => import('./pages/mainPages/Home'))
@@ -16,12 +17,14 @@ const Profile = lazy(() => import('./pages/Profile/Profile'))
 const Settings = lazy(() => import('./pages/Settings/Settings'))
 const Bookings = lazy(() => import('./pages/Bookings/Bookings'))
 const Host = lazy(() => import('./pages/Host/Host'))
+const Search = lazy(() => import('./pages/Search/Search'))
 
 function App() {
   return (
     <div className="App">
       <Router>
         <Suspense>
+          <Layout>
           <Routes>
 
             <Route exact path="/" element={<Home />} />
@@ -36,8 +39,10 @@ function App() {
             <Route path="/settings" element={<Settings />} />
             <Route path="/bookings" element={<Bookings />} />
             <Route path="/host" element={<Host />} />
+            <Route path="/searchProp" element={<Search />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
+          </Layout>
         </Suspense>
 
       </Router>

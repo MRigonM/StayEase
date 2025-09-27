@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import api from "../../authService/AxiosInstance";
 
+
 const Settings = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -177,7 +178,7 @@ const Settings = () => {
 
         <div className="max-w-3xl mx-auto mt-12 bg-white shadow-xl rounded-2xl p-8">
           <h1 className="text-3xl font-bold text-gray-900 text-center mb-6">
-            ⚙️ Edit Profile
+             Edit Profile
           </h1>
 
           {message && (

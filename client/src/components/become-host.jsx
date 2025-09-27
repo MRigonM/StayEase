@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export function BecomeHost() {
   return (
@@ -17,12 +18,12 @@ export function BecomeHost() {
             are earning by sharing their homes on StayEase.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <a
-              href="#"
+            <Link
+             to={"/host"}
               className="block bg-white text-black font-medium text-lg px-6 py-3 rounded-lg hover:bg-gray-100 text-center"
             >
               Start Hosting
-            </a>
+            </Link>
             <a
               href="#"
               className="block border border-white text-white font-medium text-lg px-6 py-3 rounded-lg hover:bg-white/10 text-center"

@@ -1,35 +1,67 @@
-import React, { useState } from "react";
-import { CalendarIcon, MapPin, Search, Users } from "lucide-react";
+"use client";
+import React, { useState, useEffect } from "react";
+import { CalendarIcon, MapPin, Search } from "lucide-react";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
+import api from "../authService/AxiosInstance";
 
 export function SearchBar() {
-  const [date, setDate] = useState({
-    from: undefined,
-    to: undefined,
-  });
-
+  const [date, setDate] = useState({ from: undefined, to: undefined });
   const [showCalendar, setShowCalendar] = useState(false);
-  const [guestCount, setGuestCount] = useState("");
+  const [dropdowns, setDropdowns] = useState({ countries: [], regions: [], locations: [] });
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const navigate = useNavigate();
+
+  // Fetch dropdown data
+  useEffect(() => {
+    api.get("/Property/GetProperties").then((res) => {
+      const props = res.data.data;
+
+      const unique = (arr, key) =>
+        Array.from(new Map(arr.map((i) => [i[key], i])).values());
+
+      setDropdowns({
+        countries: unique(props.map((p) => p.country), "id"),
+        regions: unique(props.map((p) => p.region), "id"),
+        locations: unique(props.map((p) => p.location), "id"),
+      });
+    });
+  }, []);
 
   const handleDateSelect = (from, to) => {
     setDate({ from, to });
     setShowCalendar(false);
   };
 
+  const handleSearch = () => {
+    if (selectedLocation) {
+      navigate(`/searchProp?location=${encodeURIComponent(selectedLocation)}`);
+    } else {
+      navigate("/searchProp");
+    }
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-lg p-4 md:p-6">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {/* Destination */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Destination Dropdown */}
         <div className="space-y-2">
           <div className="flex items-center text-sm font-medium">
             <MapPin className="h-4 w-4 mr-2 text-teal-600" />
             <span>Destination</span>
           </div>
-          <input
-            type="text"
-            placeholder="Where are you going?"
+          <select
+            value={selectedLocation}
+            onChange={(e) => setSelectedLocation(e.target.value)}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-          />
+          >
+            <option value="">Select Location</option>
+            {dropdowns.locations.map((loc) => (
+              <option key={loc.id} value={loc.name}>
+                {loc.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Date Range */}
@@ -46,10 +78,7 @@ export function SearchBar() {
           >
             {date.from
               ? date.to
-                ? `${format(date.from, "MMM d, yyyy")} — ${format(
-                    date.to,
-                    "MMM d, yyyy"
-                  )}`
+                ? `${format(date.from, "MMM d, yyyy")} — ${format(date.to, "MMM d, yyyy")}`
                 : `${format(date.from, "MMM d, yyyy")}`
               : "Select dates"}
           </button>
@@ -60,10 +89,7 @@ export function SearchBar() {
                 <p className="text-gray-500">Calendar UI goes here</p>
                 <button
                   onClick={() =>
-                    handleDateSelect(
-                      new Date(),
-                      new Date(new Date().setDate(new Date().getDate() + 5))
-                    )
+                    handleDateSelect(new Date(), new Date(new Date().setDate(new Date().getDate() + 5)))
                   }
                   className="mt-2 text-teal-500 underline"
                 >
@@ -73,33 +99,14 @@ export function SearchBar() {
             </div>
           )}
         </div>
-
-        {/* Guests */}
-        <div className="space-y-2">
-          <div className="flex items-center text-sm font-medium">
-            <Users className="h-4 w-4 mr-2 text-teal-600" />
-            <span>Guests</span>
-          </div>
-          <select
-            value={guestCount}
-            onChange={(e) => setGuestCount(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-          >
-            <option value="" disabled>
-              Add guests
-            </option>
-            <option value="1">1 guest</option>
-            <option value="2">2 guests</option>
-            <option value="3">3 guests</option>
-            <option value="4">4 guests</option>
-            <option value="5+">5+ guests</option>
-          </select>
-        </div>
       </div>
 
       {/* Search Button */}
       <div className="mt-6">
-        <button className="w-full md:w-auto bg-teal-600 text-white px-4 py-2 rounded-lg flex items-center justify-center hover:bg-teal-700">
+        <button
+          onClick={handleSearch}
+          className="w-full md:w-auto bg-teal-600 text-white px-4 py-2 rounded-lg flex items-center justify-center hover:bg-teal-700"
+        >
           <Search className="h-4 w-4 mr-2" />
           Search Stays
         </button>
