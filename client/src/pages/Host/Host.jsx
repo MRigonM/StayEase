@@ -28,8 +28,7 @@ export default function CreateProperty() {
 
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
-
-  const BASE_URL = "https://localhost:5000/";
+  const [errors, setErrors] = useState({});
 
   // Fetch dropdown data
   useEffect(() => {
@@ -85,6 +84,15 @@ export default function CreateProperty() {
     setSubmitting(true);
     setMessage("");
 
+    const newErrors = validateForm();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setSubmitting(false);
+      return;
+    }
+
+    setErrors({});
+
     try {
       const fd = new FormData();
       fd.append("Name", form.name);
@@ -117,13 +125,11 @@ export default function CreateProperty() {
       });
 
       setMessage(res.data.message || "Property created!");
-
-      // Update form with backend returned images
       if (res.data.data?.imageUrls) {
         setForm((f) => ({
           ...f,
           imageUrls: res.data.data.imageUrls,
-          images: [], // clear local previews
+          images: [],
         }));
       }
     } catch (err) {
@@ -136,13 +142,49 @@ export default function CreateProperty() {
 
   const primaryImage =
       form.imageUrls?.length > 0
-          ? form.imageUrls[0]  // use directly, no BASE_URL
+          ? form.imageUrls[0]
           : form.images.length > 0
               ? URL.createObjectURL(form.images[0])
               : null;
-
-
   const nightly = form.nightPrice;
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!form.name?.trim()) {
+      newErrors.name = "Name is required.";
+    } else if (form.name.length < 2 || form.name.length > 100) {
+      newErrors.name = "Name must be between 2 and 100 characters.";
+    }
+
+    if (!form.description?.trim()) {
+      newErrors.description = "Description is required.";
+    } else if (form.description.length < 10) {
+      newErrors.description = "Description must be at least 10 characters.";
+    }
+
+    if (!form.nightPrice || Number(form.nightPrice) <= 0) {
+      newErrors.nightPrice = "Night price must be greater than 0.";
+    }
+
+    if (!form.placeType?.trim()) {
+      newErrors.placeType = "Place type is required.";
+    }
+
+    if (!form.location?.id) newErrors.location = "Location is required.";
+    if (!form.region?.id) newErrors.region = "Region is required.";
+    if (!form.country?.id) newErrors.country = "Country is required.";
+
+    if (!form.owner.fullName?.trim() || !form.owner.email?.trim()) {
+      newErrors.owner = "Owner is required.";
+    }
+
+    const totalImages = (form.images?.length || 0) + (form.imageUrls?.length || 0);
+    if (totalImages === 0) newErrors.images = "At least one image is required.";
+    if (totalImages > 8) newErrors.images = "You can upload a maximum of 8 images.";
+
+    return newErrors;
+  };
 
   return (
       <>
@@ -164,45 +206,58 @@ export default function CreateProperty() {
               <section className="bg-white rounded-2xl shadow-sm border p-6">
                 <h2 className="text-lg font-semibold mb-4">Listing basics</h2>
                 <input
-                    className="w-full border rounded-xl px-3 py-2 mb-3"
+                    className="w-full border rounded-xl px-3 py-2 mb-1"
                     placeholder="Name"
                     value={form.name}
                     onChange={(e) => setField("name", e.target.value)}
                 />
+                {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+
                 <input
                     type="number"
-                    className="w-full border rounded-xl px-3 py-2 mb-3"
+                    className="w-full border rounded-xl px-3 py-2 mb-1"
                     placeholder="Nightly Price"
                     value={form.nightPrice}
                     onChange={(e) => setField("nightPrice", e.target.value)}
                 />
+                {errors.nightPrice && (
+                    <p className="text-red-500 text-sm">{errors.nightPrice}</p>
+                )}
+
                 <input
                     type="text"
-                    className="w-full border rounded-xl px-3 py-2 mb-3"
+                    className="w-full border rounded-xl px-3 py-2 mb-1"
                     placeholder="Place Type"
                     value={form.placeType}
                     onChange={(e) => setField("placeType", e.target.value)}
                 />
+                {errors.placeType && (
+                    <p className="text-red-500 text-sm">{errors.placeType}</p>
+                )}
+
                 <textarea
-                    className="w-full border rounded-xl px-3 py-2"
+                    className="w-full border rounded-xl px-3 py-2 mb-1"
                     placeholder="Description"
                     value={form.description}
                     onChange={(e) => setField("description", e.target.value)}
                 />
+                {errors.description && (
+                    <p className="text-red-500 text-sm">{errors.description}</p>
+                )}
               </section>
 
               {/* Owner Info */}
               <section className="bg-white rounded-2xl shadow-sm border p-6">
                 <h2 className="text-lg font-semibold mb-4">Owner Information</h2>
                 <input
-                    className="w-full border rounded-xl px-3 py-2 mb-3"
+                    className="w-full border rounded-xl px-3 py-2 mb-1"
                     placeholder="Full Name"
                     value={form.owner.fullName}
                     onChange={(e) => setField("owner.fullName", e.target.value)}
                 />
                 <input
                     type="email"
-                    className="w-full border rounded-xl px-3 py-2 mb-3"
+                    className="w-full border rounded-xl px-3 py-2 mb-1"
                     placeholder="Email"
                     value={form.owner.email}
                     onChange={(e) => setField("owner.email", e.target.value)}
@@ -214,6 +269,9 @@ export default function CreateProperty() {
                     value={form.owner.phoneNumber}
                     onChange={(e) => setField("owner.phoneNumber", e.target.value)}
                 />
+                {errors.owner && (
+                    <p className="text-red-500 text-sm mt-1">{errors.owner}</p>
+                )}
               </section>
 
               {/* Room Services */}
@@ -269,11 +327,14 @@ export default function CreateProperty() {
                     onChange={onFileChange}
                     className="mb-2"
                 />
+                {errors.images && (
+                    <p className="text-red-500 text-sm">{errors.images}</p>
+                )}
                 <div className="flex gap-2 flex-wrap">
                   {form.imageUrls?.map((img, i) => (
                       <img
                           key={i}
-                          src={img}  // just use it directly
+                          src={img}
                           alt={`property-${i}`}
                           className="h-20 w-20 object-cover rounded-lg border"
                       />
@@ -293,68 +354,83 @@ export default function CreateProperty() {
               <section className="bg-white rounded-2xl shadow-sm border p-6">
                 <h2 className="text-lg font-semibold mb-4">Location</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <select
-                      className="border rounded-xl px-3 py-2"
-                      value={form.country?.id || ""}
-                      onChange={(e) => {
-                        const country = dropdowns.countries.find(
-                            (c) => String(c.id) === e.target.value
-                        );
-                        setForm((f) => ({
-                          ...f,
-                          country: country || { id: "", name: "" },
-                        }));
-                      }}
-                  >
-                    <option value="">Select Country</option>
-                    {dropdowns.countries.map((c) => (
-                        <option key={c.id} value={c.id}>
-                          {c.name}
-                        </option>
-                    ))}
-                  </select>
+                  <div>
+                    <select
+                        className="border rounded-xl px-3 py-2 w-full"
+                        value={form.country?.id || ""}
+                        onChange={(e) => {
+                          const country = dropdowns.countries.find(
+                              (c) => String(c.id) === e.target.value
+                          );
+                          setForm((f) => ({
+                            ...f,
+                            country: country || { id: "", name: "" },
+                          }));
+                        }}
+                    >
+                      <option value="">Select Country</option>
+                      {dropdowns.countries.map((c) => (
+                          <option key={c.id} value={c.id}>
+                            {c.name}
+                          </option>
+                      ))}
+                    </select>
+                    {errors.country && (
+                        <p className="text-red-500 text-sm">{errors.country}</p>
+                    )}
+                  </div>
 
-                  <select
-                      className="border rounded-xl px-3 py-2"
-                      value={form.region?.id || ""}
-                      onChange={(e) => {
-                        const region = dropdowns.regions.find(
-                            (r) => String(r.id) === e.target.value
-                        );
-                        setForm((f) => ({
-                          ...f,
-                          region: region || { id: "", name: "" },
-                        }));
-                      }}
-                  >
-                    <option value="">Select Region</option>
-                    {dropdowns.regions.map((r) => (
-                        <option key={r.id} value={r.id}>
-                          {r.name}
-                        </option>
-                    ))}
-                  </select>
+                  <div>
+                    <select
+                        className="border rounded-xl px-3 py-2 w-full"
+                        value={form.region?.id || ""}
+                        onChange={(e) => {
+                          const region = dropdowns.regions.find(
+                              (r) => String(r.id) === e.target.value
+                          );
+                          setForm((f) => ({
+                            ...f,
+                            region: region || { id: "", name: "" },
+                          }));
+                        }}
+                    >
+                      <option value="">Select Region</option>
+                      {dropdowns.regions.map((r) => (
+                          <option key={r.id} value={r.id}>
+                            {r.name}
+                          </option>
+                      ))}
+                    </select>
+                    {errors.region && (
+                        <p className="text-red-500 text-sm">{errors.region}</p>
+                    )}
+                  </div>
 
-                  <select
-                      className="border rounded-xl px-3 py-2"
-                      value={form.location?.id || ""}
-                      onChange={(e) => {
-                        const location = dropdowns.locations.find(
-                            (l) => String(l.id) === e.target.value
-                        );
-                        setForm((f) => ({
-                          ...f,
-                          location: location || { id: "", name: "" },
-                        }));
-                      }}
-                  >
-                    <option value="">Select Location</option>
-                    {dropdowns.locations.map((l) => (
-                        <option key={l.id} value={l.id}>
-                          {l.name}
-                        </option>
-                    ))}
-                  </select>
+                  <div>
+                    <select
+                        className="border rounded-xl px-3 py-2 w-full"
+                        value={form.location?.id || ""}
+                        onChange={(e) => {
+                          const location = dropdowns.locations.find(
+                              (l) => String(l.id) === e.target.value
+                          );
+                          setForm((f) => ({
+                            ...f,
+                            location: location || { id: "", name: "" },
+                          }));
+                        }}
+                    >
+                      <option value="">Select Location</option>
+                      {dropdowns.locations.map((l) => (
+                          <option key={l.id} value={l.id}>
+                            {l.name}
+                          </option>
+                      ))}
+                    </select>
+                    {errors.location && (
+                        <p className="text-red-500 text-sm">{errors.location}</p>
+                    )}
+                  </div>
                 </div>
               </section>
 
@@ -387,7 +463,7 @@ export default function CreateProperty() {
               >
                 {submitting ? "Creating..." : "Create Listing"}
               </button>
-              {message && <p className="mt-2">{message}</p>}
+              {message && <p className="text-green-600 font-bold">{message}</p>}
             </form>
 
             {/* Right: preview */}
@@ -402,7 +478,9 @@ export default function CreateProperty() {
                   <div className="text-sm text-gray-500">
                     {form.location?.name} {form.country?.name}
                   </div>
-                  <div className="font-semibold">{form.name || "Your listing"}</div>
+                  <div className="font-semibold">
+                    {form.name || "Your listing"}
+                  </div>
                   <p className="text-sm text-gray-600">{form.description}</p>
                   <div className="mt-2">
                     <span className="font-semibold">€{nightly || 0}</span>
