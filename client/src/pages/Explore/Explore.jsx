@@ -43,7 +43,7 @@ const Explore = () => {
           }
 
           return {
-            id: idx,
+            id: p.id,
             title: p.name,
             description: p.description,
             price: p.nightPrice,
