@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using System.Security.Claims;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using StayEase.Domain;
@@ -46,6 +48,7 @@ namespace StayEase.APIs.Controllers
         }
 
         //[Authorize(Roles = "Owner")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("CreateProperty")]
         public async Task<ActionResult<Responses>> CreateProperty([FromForm] PropertyToCreateDTO propertyDTO)
         {

@@ -82,7 +82,7 @@ public class PropertyService : IPropertyService
             foreach (var img in propertyDTO.Images)
             {
                 var imgName = await DocumentSettings.UploadFile(img, SD.Image, "Property");
-                var url = _configuration["BaseUrl"] + $"{imgName}";
+                var url = $"{imgName}";
                 images.Add(new Image { PropertyId = propertyId, Url = url });
             }
 
