@@ -14,7 +14,7 @@ const Settings = () => {
   // formData për editim
   const [formData, setFormData] = useState({
     firstName: "",
-    middleName: "",
+    middlName: "",
     lastName: "",
     email: "",
     userName: "",
@@ -40,7 +40,7 @@ const Settings = () => {
           // ndajmë fullName në pjesë
           const nameParts = userData.fullName?.trim().split(" ") || [];
           let firstName = "";
-          let middleName = "";
+          let middlName = "";
           let lastName = "";
 
           if (nameParts.length === 1) {
@@ -51,12 +51,12 @@ const Settings = () => {
           } else if (nameParts.length >= 3) {
             firstName = nameParts[0];
             lastName = nameParts[nameParts.length - 1];
-            middleName = nameParts.slice(1, -1).join(" "); // nëse ka më shumë se 3 pjesë
+            middlName = nameParts.slice(1, -1).join(" "); // nëse ka më shumë se 3 pjesë
           }
 
           setFormData({
             firstName,
-            middleName,
+            middlName,
             lastName,
             email: userData.email || "",
             userName: userData.username || "",
@@ -97,7 +97,7 @@ const Settings = () => {
 
       const form = new FormData();
       form.append("FirstName", formData.firstName);
-      form.append("MiddleName", formData.middleName);
+      form.append("MiddlName", formData.middlName);
       form.append("LastName", formData.lastName);
       form.append("Email", formData.email);
       form.append("UserName", formData.userName);
@@ -107,7 +107,8 @@ const Settings = () => {
         form.append("ProfileImage", formData.profileImage);
       }
 
-      const res = await api.put(`/Users/UpdateUser?Id=${user.Id}`, form, {
+      const userId = user.id || user.Id;
+      const res = await api.put(`/Users/UpdateUser?Id=${userId}`, form, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -183,8 +184,8 @@ const Settings = () => {
               <label className="block text-sm text-gray-700">Middle Name</label>
               <input
                 type="text"
-                name="middleName"
-                value={formData.middleName}
+                name="middlName"
+                value={formData.middlName}
                 onChange={handleChange}
                 className="mt-1 w-full px-3 py-2 border rounded-lg shadow-sm focus:ring-logoColor focus:border-logoColor"
               />

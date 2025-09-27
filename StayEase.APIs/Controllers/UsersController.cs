@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using StayEase.Domain.DataTransferObjects.Identity;
 
 namespace StayEase.APIs.Controllers
@@ -104,6 +106,8 @@ namespace StayEase.APIs.Controllers
             if (user is not null) return await Responses.FailurResponse("Email Is Already Exist!.");
             return Ok(await _userService.CreateUserAsync(userDto));
         }
+        
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut("UpdateUser")]
         public async Task<ActionResult<Responses>> UpdateUser([FromQuery] string Id, [FromForm] UpdateUserDTO userDto)
         {
