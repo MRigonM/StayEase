@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import api from "../../authService/AxiosInstance";
+import { MapPin } from "lucide-react";
 
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -14,12 +15,50 @@ const Bookings = () => {
           setLoading(false);
           return;
         }
+
+        // 1. Merr user-in ose direkt bookings nga API
         const userRes = await api.get(
           `/Users/GetUserByFullName/${encodeURIComponent(fullName)}`
         );
-        const user = userRes.data?.data || null;
-        console.log("Bookings response:", user?.bookings);
-        setBookings(user?.bookings || []);
+        const bookingsRes = userRes.data?.data?.bookings || [];
+
+        // 2. Për çdo booking, merr edhe pronën (duke përdorur query param)
+        const bookingsWithProperty = await Promise.all(
+          bookingsRes.map(async (b) => {
+            try {
+              const propertyRes = await api.get(
+                `/Property/GetProperty?propertyId=${b.propertyId}`
+              );
+              const p = propertyRes.data?.data;
+
+              const mappedProperty = p
+                ? {
+                    id: p.id,
+                    title: p.name,
+                    description: p.description,
+                    price: p.nightPrice,
+                    image:
+                      p.imageUrls && p.imageUrls.length > 0
+                        ? `https://localhost:5000/${p.imageUrls[0]}`
+                        : "https://placehold.co/600x400/png",
+                    location:
+                      p.location?.name ||
+                      p.country?.name ||
+                      p.region?.name ||
+                      "Unknown location",
+                    tags: p.placeType ? [p.placeType] : [],
+                  }
+                : null;
+
+              return { ...b, property: mappedProperty };
+            } catch (err) {
+              console.error("Error fetching property:", err);
+              return { ...b, property: null };
+            }
+          })
+        );
+
+        setBookings(bookingsWithProperty);
       } catch (error) {
         console.error("Error fetching bookings:", error);
       } finally {
@@ -59,9 +98,7 @@ const Bookings = () => {
       <Navbar />
 
       <div className="max-w-6xl mx-auto px-4 py-10">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">
-          My Bookings
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-8">My Bookings</h1>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {bookings.map((b, i) => (
@@ -70,10 +107,10 @@ const Bookings = () => {
               className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition overflow-hidden"
             >
               {/* Property Image */}
-              {b.property?.imageUrl ? (
+              {b.property?.image ? (
                 <img
-                  src={b.property.imageUrl}
-                  alt={b.property.name}
+                  src={b.property.image}
+                  alt={b.property.title}
                   className="h-48 w-full object-cover"
                 />
               ) : (
@@ -85,11 +122,16 @@ const Bookings = () => {
               {/* Property Info */}
               <div className="p-5">
                 <h2 className="text-xl font-bold text-logoColor">
-                  {b.property?.name}
+                  {b.property?.title || "Unknown Property"}
                 </h2>
                 <p className="text-gray-600 text-sm mt-1 line-clamp-2">
-                  {b.property?.description}
+                  {b.property?.description || "No description available."}
                 </p>
+
+                <div className="flex items-center text-sm text-gray-500 mt-2">
+                  <MapPin className="h-4 w-4 mr-1 text-teal-600" />
+                  {b.property?.location}
+                </div>
 
                 {/* Booking Dates */}
                 <div className="mt-4 flex justify-between text-sm text-gray-500">
@@ -105,12 +147,6 @@ const Bookings = () => {
                 {/* Details */}
                 <div className="mt-3 text-sm text-gray-600 space-y-1">
                   <p>
-                    Guests:{" "}
-                    <span className="font-semibold">
-                      {b.guests || 1}
-                    </span>
-                  </p>
-                  <p>
                     Payment:{" "}
                     <span className="font-semibold">
                       {b.paymentMethod || "N/A"}
@@ -124,21 +160,27 @@ const Bookings = () => {
                   )}
                 </div>
 
-                {/* Status */}
                 <div className="mt-4">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-semibold 
-                      ${
-                        b.status === "Confirmed"
-                          ? "bg-green-100 text-green-600"
-                          : b.status === "Pending"
-                          ? "bg-yellow-100 text-yellow-600"
-                          : "bg-red-100 text-red-600"
-                      }`}
-                  >
-                    {b.status || "Pending"}
-                  </span>
-                </div>
+    <button
+  onClick={async () => {
+    if (!window.confirm("Are you sure you want to cancel this booking?")) {
+      return;
+    }
+    try {
+      await api.put(`/Booking/CancelBooking?bookingId=${b.id}`);
+      alert("Booking cancelled successfully!");
+      setBookings((prev) => prev.filter((x) => x.id !== b.id));
+    } catch (err) {
+      console.error("Error cancelling booking:", err);
+      alert("Failed to cancel booking. Try again.");
+    }
+  }}
+  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+>
+  Cancel Booking
+</button>
+
+    </div>
               </div>
             </div>
           ))}
