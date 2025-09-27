@@ -125,5 +125,20 @@ namespace StayEase.APIs.Controllers
 
             return Ok(await _userService.UpdateUser(user, userDto));
         }
+        
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost("ConfirmUpdate")]
+        public async Task<ActionResult<Responses>> ConfirmUpdate([FromBody] ConfirmUpdateDto dto)
+        {
+            var user = await _userManager.FindByIdAsync(dto.Id);
+            if (user == null)
+                return await Responses.FailurResponse("User Not Found", HttpStatusCode.NotFound);
+
+            var result = await _userManager.ConfirmEmailAsync(user, dto.Code);
+            if (!result.Succeeded)
+                return await Responses.FailurResponse("Invalid confirmation code.");
+
+            return await Responses.SuccessResponse("User updated successfully!");
+        }
     }
 }
