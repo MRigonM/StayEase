@@ -15,6 +15,9 @@ import api from "../../authService/AxiosInstance";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
+  const [properties, setProperties] = useState([]);
+  const [bookings, setBookings] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fullName = localStorage.getItem("userName");
@@ -26,10 +29,108 @@ const Profile = () => {
           setLoading(false);
           return;
         }
+
+        // 1. Merr user-in
         const userRes = await api.get(
           `/Users/GetUserByFullName/${encodeURIComponent(fullName)}`
         );
-        setUser(userRes.data?.data || null);
+        const u = userRes.data?.data || null;
+        setUser(u);
+
+        if (!u) {
+          setLoading(false);
+          return;
+        }
+
+        // 2. Merr krejt properties
+        const allPropsRes = await api.get("/Property/GetProperties");
+        const allProps = allPropsRes.data?.data || [];
+
+        // --- My Properties ---
+        const userProps = allProps
+          .filter((p) => p.ownerId === u.id || p.owner?.fullName === u.fullName)
+          .map((p) => ({
+            id: p.id,
+            name: p.name,
+            nightPrice: p.nightPrice,
+            rate: p.rate || 0,
+            image:
+              p.imageUrls && p.imageUrls.length > 0
+                ? `https://localhost:5000/${p.imageUrls[0]}`
+                : "https://placehold.co/100x80/png",
+            location:
+              p.location?.name ||
+              p.country?.name ||
+              p.region?.name ||
+              "Unknown location",
+          }));
+        setProperties(userProps);
+
+  
+       const userReviews = [];
+for (const p of allProps) {
+  try {
+    const reviewsRes = await api.get(`/Review/Property/${p.id}`);
+    const propReviews = reviewsRes.data?.data || [];
+
+    propReviews.forEach((r) => {
+    
+      if (r.userId === u.id || r.user?.fullName === u.fullName) {
+        userReviews.push({
+          id: r.id,
+          propertyName: p.name,
+          propertyImage:
+            p.imageUrls && p.imageUrls.length > 0
+              ? `https://localhost:5000/${p.imageUrls[0]}`
+              : "https://placehold.co/100x80/png",
+          comment: r.comment,
+          stars: r.stars,
+          date: r.date,
+        });
+      }
+    });
+  } catch (err) {
+    console.error("Error fetching reviews for property:", err);
+  }
+}
+setReviews(userReviews);
+
+
+        const bookingsRes = u?.bookings || [];
+        const bookingsWithProperty = await Promise.all(
+          bookingsRes.map(async (b) => {
+            try {
+              const propertyRes = await api.get(
+                `/Property/GetProperty?propertyId=${b.propertyId}`
+              );
+              const p = propertyRes.data?.data;
+
+              const mappedProperty = p
+                ? {
+                    id: p.id,
+                    name: p.name,
+                    description: p.description,
+                    nightPrice: p.nightPrice,
+                    image:
+                      p.imageUrls && p.imageUrls.length > 0
+                        ? `https://localhost:5000/${p.imageUrls[0]}`
+                        : "https://placehold.co/600x400/png",
+                    location:
+                      p.location?.name ||
+                      p.country?.name ||
+                      p.region?.name ||
+                      "Unknown location",
+                  }
+                : null;
+
+              return { ...b, property: mappedProperty };
+            } catch (err) {
+              console.error("Error fetching property:", err);
+              return { ...b, property: null };
+            }
+          })
+        );
+        setBookings(bookingsWithProperty);
       } catch (error) {
         console.error("Error fetching user data:", error);
       } finally {
@@ -101,21 +202,21 @@ const Profile = () => {
           <div className="bg-gray-50 p-6 rounded-xl shadow">
             <Home className="h-6 w-6 mx-auto text-[#FF385C] mb-2" />
             <p className="text-2xl font-bold text-[#FF385C]">
-              {user.properties?.length || 0}
+              {properties?.length || 0}
             </p>
             <p className="text-sm text-gray-600">Properties</p>
           </div>
           <div className="bg-gray-50 p-6 rounded-xl shadow">
             <Calendar className="h-6 w-6 mx-auto text-[#FF385C] mb-2" />
             <p className="text-2xl font-bold text-[#FF385C]">
-              {user.bookings?.length || 0}
+              {bookings?.length || 0}
             </p>
             <p className="text-sm text-gray-600">Bookings</p>
           </div>
           <div className="bg-gray-50 p-6 rounded-xl shadow">
             <MessageSquare className="h-6 w-6 mx-auto text-[#FF385C] mb-2" />
             <p className="text-2xl font-bold text-[#FF385C]">
-              {user.reviews?.length || 0}
+              {reviews?.length || 0}
             </p>
             <p className="text-sm text-gray-600">Reviews</p>
           </div>
@@ -125,7 +226,7 @@ const Profile = () => {
       {/* Tabs Section */}
       <div className="mt-12 max-w-6xl mx-auto space-y-12 px-4 pb-20">
         {/* Properties */}
-        {user.properties?.length > 0 && (
+        {properties?.length > 0 && (
           <div>
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
               My Properties
@@ -142,15 +243,11 @@ const Profile = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {user.properties.map((p) => (
+                  {properties.map((p) => (
                     <tr key={p.id} className="hover:bg-gray-50 transition">
                       <td className="p-4">
                         <img
-                          src={
-                            p.imageUrls?.length > 0
-                              ? `https://localhost:5000/${p.imageUrls[0]}`
-                              : "https://placehold.co/100x80/png"
-                          }
+                          src={p.image}
                           alt={p.name}
                           className="w-20 h-16 object-cover rounded-md border"
                         />
@@ -160,17 +257,12 @@ const Profile = () => {
                       </td>
                       <td className="p-4 text-gray-600 flex items-center gap-1">
                         <MapPin className="h-4 w-4 text-teal-600" />
-                        {p.location?.name ||
-                          p.country?.name ||
-                          p.region?.name ||
-                          "Unknown"}
+                        {p.location}
                       </td>
                       <td className="p-4 font-medium text-[#FF385C]">
                         €{p.nightPrice}/night
                       </td>
-                      <td className="p-4 text-yellow-500">
-                        ⭐ {p.rate || "0"}
-                      </td>
+                      <td className="p-4 text-yellow-500">⭐ {p.rate}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -180,7 +272,7 @@ const Profile = () => {
         )}
 
         {/* Bookings */}
-        {user.bookings?.length > 0 && (
+        {bookings?.length > 0 && (
           <div>
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
               My Bookings
@@ -189,16 +281,31 @@ const Profile = () => {
               <table className="w-full text-left border-collapse">
                 <thead className="bg-gray-100 text-gray-700 text-sm">
                   <tr>
+                    <th className="p-4">Image</th>
                     <th className="p-4">Dates</th>
                     <th className="p-4">Property</th>
+                    <th className="p-4">Location</th>
                     <th className="p-4">Payment Method</th>
                     <th className="p-4">Payment Date</th>
                     <th className="p-4">Total Price</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {user.bookings.map((b) => (
+                  {bookings.map((b) => (
                     <tr key={b.id} className="hover:bg-gray-50 transition">
+                      <td className="p-4">
+                        {b.property?.image ? (
+                          <img
+                            src={b.property.image}
+                            alt={b.property?.name || "Property"}
+                            className="w-20 h-16 object-cover rounded-md border"
+                          />
+                        ) : (
+                          <div className="w-20 h-16 bg-gray-200 flex items-center justify-center rounded-md border">
+                            <span className="text-gray-500 text-xs">No Image</span>
+                          </div>
+                        )}
+                      </td>
                       <td className="p-4 font-medium text-gray-900">
                         {new Date(b.startDate).toLocaleDateString()} →{" "}
                         {new Date(b.endDate).toLocaleDateString()}
@@ -206,7 +313,13 @@ const Profile = () => {
                       <td className="p-4 text-gray-600">
                         {b.property?.name || "—"}
                       </td>
-                      <td className="p-4 text-gray-600">{b.paymentMethod}</td>
+                      <td className="p-4 text-gray-600 flex items-center gap-1">
+                        <MapPin className="h-4 w-4 text-teal-600" />
+                        {b.property?.location || "Unknown"}
+                      </td>
+                      <td className="p-4 text-gray-600">
+                        {b.paymentMethod || "—"}
+                      </td>
                       <td className="p-4 text-gray-600">
                         {b.paymentDate
                           ? new Date(b.paymentDate).toLocaleDateString()
@@ -224,7 +337,7 @@ const Profile = () => {
         )}
 
         {/* Reviews */}
-        {user.reviews?.length > 0 && (
+        {reviews?.length > 0 && (
           <div>
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
               My Reviews
@@ -233,6 +346,7 @@ const Profile = () => {
               <table className="w-full text-left border-collapse">
                 <thead className="bg-gray-100 text-gray-700 text-sm">
                   <tr>
+                    <th className="p-4">Image</th>
                     <th className="p-4">Property</th>
                     <th className="p-4">Comment</th>
                     <th className="p-4">Stars</th>
@@ -240,10 +354,17 @@ const Profile = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {user.reviews.map((r) => (
+                  {reviews.map((r) => (
                     <tr key={r.id} className="hover:bg-gray-50 transition">
+                      <td className="p-4">
+                        <img
+                          src={r.propertyImage}
+                          alt={r.propertyName}
+                          className="w-20 h-16 object-cover rounded-md border"
+                        />
+                      </td>
                       <td className="p-4 font-medium text-gray-900">
-                        {r.property?.name || "—"}
+                        {r.propertyName}
                       </td>
                       <td className="p-4 text-gray-600 italic">
                         "{r.comment}"
