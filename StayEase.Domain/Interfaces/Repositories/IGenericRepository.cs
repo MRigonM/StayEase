@@ -6,7 +6,7 @@ namespace StayEase.Domain.Interfaces.Repositories
     public interface IGenericRepository<TEntity,TKey> where TEntity : BaseEntity<TKey>
     {
         #region Without Specification
-        Task<IEnumerable<TEntity>>? GetAllAsync();
+        IQueryable<TEntity> GetAll();
         Task<TEntity>? GetByIdAsync(TKey id);
         #endregion
 

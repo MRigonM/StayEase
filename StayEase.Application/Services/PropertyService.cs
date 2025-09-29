@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using StayEase.Application.Settings;
 using StayEase.Application.Utility;
@@ -124,22 +125,28 @@ public class PropertyService : IPropertyService
         }
         public async Task<Responses> GetAllPropertiesAsync()
         {
-            // there is a cycle when return the object
-            var properties = (await _unitOfWork.Repository<Property, string>().GetAllAsync()).ToList();
-            if (!properties.Any()) return await Responses.FailurResponse("There is no properties found", System.Net.HttpStatusCode.NotFound);
-            var MappedProperties = _mapper.Map<List<Property>, List< PropertyDTO>>(properties);
+            var properties = await _unitOfWork
+                .Repository<Property, string>()
+                .GetAll()
+                .Include(p => p.Images) 
+                .ToListAsync();
 
-            for(int i = 0; i < properties.Count(); i++)
+            if (!properties.Any())
+                return await Responses.FailurResponse("There are no properties found", 
+                    System.Net.HttpStatusCode.NotFound);
+
+            var mappedProperties = _mapper.Map<List<PropertyDTO>>(properties);
+
+            for (int i = 0; i < properties.Count; i++)
             {
-                var ImgUrls = new List<string>();
-                foreach(var img in properties[i].Images)
-                {
-                    ImgUrls.Add(img.Url);
-                }
-                MappedProperties[i].ImageUrls = ImgUrls;
+                mappedProperties[i].ImageUrls = properties[i].Images
+                    .Select(img => img.Url)
+                    .ToList();
             }
-            return await Responses.SuccessResponse(MappedProperties);
+
+            return await Responses.SuccessResponse(mappedProperties);
         }
+        
         public async Task<Responses> GetPropertyByIdAsync(string propertyId)
         {
             // there is a cycle when return the object

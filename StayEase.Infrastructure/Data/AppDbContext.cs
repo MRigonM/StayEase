@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using StayEase.Domain.Entities;
+using StayEase.Domain.Entities.Enti;
 using StayEase.Domain.Identity;
 
 namespace StayEase.Infrastructure.Data;
@@ -68,4 +69,8 @@ public class AppDbContext : IdentityDbContext<AppUser>
     public DbSet<Region> Regions { get; set; }
     public DbSet<Review> Reviews { get; set; }
     public DbSet<RoomService> roomServices { get; set; }
+    
+    public DbSet<Member> Members { get; set; }
+
+    public DbSet<Group> Groups { get; set; }
 }

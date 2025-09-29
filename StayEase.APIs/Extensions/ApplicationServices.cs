@@ -9,7 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 using StayEase.APIs.Validators;
 using StayEase.Application.Models;
+using StayEase.Application.Services.Servi;
 using StayEase.Domain.Interfaces.Repositories;
+using StayEase.Domain.Interfaces.Services.Servi;
 using StayEase.Infrastructure.Data;
 using StayEase.Infrastructure.Repositories;
 using Stripe;
@@ -49,8 +51,17 @@ public static class ApplicationServices
             Services.AddScoped<IAuthService, AuthService>();
             Services.AddScoped<IUserService, UserService>();
             Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            
+            Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
+
+            Services.AddScoped(typeof(IGenericService<,>), typeof(GenericService<,>));
+            
             Services.AddScoped<IBookService, BookService>();
             Services.AddScoped<IReviewService, ReviewServices>();
+            
+            Services.AddScoped<IMemberService, MemberService>();
+            Services.AddScoped<IGroupService, GroupService>();
+            
             Services.AddHttpContextAccessor();
             
             #region Payment configuration

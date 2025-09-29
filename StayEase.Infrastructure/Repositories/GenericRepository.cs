@@ -27,11 +27,11 @@ namespace StayEase.Infrastructure.Repositories
 
         public void Remove(TEntity entity)
            => _dbSet.Remove(entity);
-
-
-        public async Task<IEnumerable<TEntity>>? GetAllAsync()
-          => await _dbSet.ToListAsync();
-
+        
+        public IQueryable<TEntity> GetAll()
+        {
+            return _dbSet.AsQueryable();
+        }
 
         public async Task<TEntity>? GetByIdAsync(TKey id)
           => (await _dbSet.FindAsync(id))!;

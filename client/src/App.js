@@ -14,6 +14,7 @@ const Explore = lazy(() => import('./pages/Explore/Explore'))
 const Details = lazy(() => import('./pages/Details/Details'))
 const Profile = lazy(() => import('./pages/Profile/Profile'))
 const Settings = lazy(() => import('./pages/Settings/Settings'))
+const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'))
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             <Route path="/details/:id" element={<Details />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Suspense>
