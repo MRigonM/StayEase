@@ -125,7 +125,7 @@ const handleSubmit = async (e) => {
                     >
             <span>
               <span className="font-semibold">{m.name}</span> ({m.role}) –{" "}
-                <span className="italic">Group ID: {m.groupId}</span>
+                <span className="ml-1 italic font-bold">Group Name: {m.groupName}</span>
             </span>
                         <div className="flex gap-2">
                             <button
