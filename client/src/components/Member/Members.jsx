@@ -26,30 +26,36 @@ const Members = () => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-        if (!form.groupId || form.groupId === 0) {
-            alert("Please select a valid group before submitting.");
-            return;
-        }
+  if (!form.groupId || form.groupId === 0) {
+    alert("Please select a valid group before submitting.");
+    return;
+  }
 
-        const payload = {
-            name: form.name.trim(),
-            role: form.role.trim(),
-            groupId: form.groupId,
-        };
+  // gjej emrin e grupit nga groupId
+  const selectedGroup = groups.find((g) => g.id === form.groupId);
 
-        if (isEditing) {
-            await api.put(`/Members/${form.id}`, { id: form.id, ...payload });
-        } else {
-            await api.post("/Members", payload);
-        }
+  const payload = {
+    id: form.id,
+    name: form.name.trim(),
+    role: form.role.trim(),
+    groupId: form.groupId,
+    groupName: selectedGroup ? selectedGroup.groupName : "",
+  };
 
-        setForm({ id: 0, name: "", role: "", groupId: 0 });
-        setIsEditing(false);
-        fetchMembers();
-    };
+  if (isEditing) {
+    await api.put(`/Members/${form.id}`, payload);
+  } else {
+    await api.post("/Members", payload);
+  }
+
+  setForm({ id: 0, name: "", role: "", groupId: 0 });
+  setIsEditing(false);
+  fetchMembers();
+};
+
 
     const handleEdit = (member) => {
         setForm(member);
