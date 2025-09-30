@@ -1,6 +1,8 @@
 using StayEase.APIs.Extensions;
 using StayEase.APIs.Utility;
 using Newtonsoft.Json;
+using StayEase.Domain.Interfaces.Services;
+using StayEase.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
@@ -15,6 +17,7 @@ builder.Services.AddMvc()
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerConfigurations();
+builder.Services.AddSingleton<INotificationService, NotificationService>();
 
 
 await builder.Services.JWTConfigurations(builder.Configuration);

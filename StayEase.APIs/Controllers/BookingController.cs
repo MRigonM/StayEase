@@ -24,12 +24,14 @@ namespace StayEase.APIs.Controllers
             _bookingToCreateValidator = bookingToCreateValidator;
             _paymentService = paymentService;
         }
+
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("CreateBooking")]
         public async Task<ActionResult<Responses>> CreateBooking([FromBody] BookingToCreateDTO bookDTO)
         {
             var validate = await _bookingToCreateValidator.ValidateAsync(bookDTO);
-            if (!validate.IsValid) return await Responses.FailurResponse(validate.Errors, HttpStatusCode.BadRequest);
+            if (!validate.IsValid) 
+                return await Responses.FailurResponse(validate.Errors, HttpStatusCode.BadRequest);
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var email = User.FindFirstValue(ClaimTypes.Email);
@@ -44,24 +46,22 @@ namespace StayEase.APIs.Controllers
         [HttpPut("CancelBooking")]
         public async Task<ActionResult<Responses>> CancelBooking([FromQuery] int bookingId)
         {
-            var Response = await _paymentService.PaymentCancelAsync(bookingId);
-            return Ok(Response);
+            var response = await _paymentService.PaymentCancelAsync(bookingId);
+            return Ok(response);
         }
          
-         [HttpDelete("DeleteBooking")]
+        [HttpDelete("DeleteBooking")]
         public async Task<ActionResult<Responses>> DeleteBooking([FromQuery] int bookingId)
         {
-            var Response = await _bookService.DeleteBookingById(bookingId);
-            return Ok(Response);
+            var response = await _bookService.DeleteBookingById(bookingId);
+            return Ok(response);
         }
-
 
         [HttpGet("GetBooking")]
         public async Task<ActionResult<Responses>> GetBookingById([FromQuery] int bookingId)
         {
             return Ok(await _bookService.GetBookingById(bookingId));
         }
-
 
         [HttpGet("GetBookingsByUser")]
         public async Task<ActionResult<Responses>> GetBookingsByUserId([FromQuery] string userId)
