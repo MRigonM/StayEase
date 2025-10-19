@@ -243,7 +243,7 @@ namespace StayEase.Infrastructure.Migrations
                     b.ToTable("Countries");
                 });
 
-            modelBuilder.Entity("StayEase.Domain.Entities.Enti.Group", b =>
+            modelBuilder.Entity("StayEase.Domain.Entities.Enti.Asistenti", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -251,31 +251,14 @@ namespace StayEase.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Description")
+                    b.Property<int>("DepartamentiId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DepartamentiName")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("GroupName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Groups");
-                });
-
-            modelBuilder.Entity("StayEase.Domain.Entities.Enti.Member", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("GroupId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("GroupName")
+                    b.Property<string>("Mbiemri")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -283,13 +266,34 @@ namespace StayEase.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Role")
+                    b.Property<string>("Pozita")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Members");
+                    b.ToTable("Asistentis");
+                });
+
+            modelBuilder.Entity("StayEase.Domain.Entities.Enti.Departamenti", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("EmriDepartamentitName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("NumriZyrave")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Departamentis");
                 });
 
             modelBuilder.Entity("StayEase.Domain.Entities.Image", b =>

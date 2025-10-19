@@ -1,9 +1,9 @@
 ﻿import React, { useState } from "react";
-import Groups from "../../components/Groups/Groups";
-import Members from "../../components/Member/Members";
+import Departamenti from "../../components/Groups/Departamenti";
+import Asistenti from "../../components/Member/Asistenti";
 
 const Dashboard = () => {
-    const [activeTab, setActiveTab] = useState("groups");
+    const [activeTab, setActiveTab] = useState("departamenti");
 
     return (
         <div className="p-8 bg-gray-100 min-h-screen">
@@ -12,9 +12,9 @@ const Dashboard = () => {
             {/* Tabs */}
             <div className="flex gap-4 mb-6">
                 <button
-                    onClick={() => setActiveTab("groups")}
+                    onClick={() => setActiveTab("departamenti")}
                     className={`px-4 py-2 rounded-md ${
-                        activeTab === "groups"
+                        activeTab === "departamenti"
                             ? "bg-blue-600 text-white"
                             : "bg-gray-200 hover:bg-gray-300"
                     }`}
@@ -22,20 +22,20 @@ const Dashboard = () => {
                     Groups
                 </button>
                 <button
-                    onClick={() => setActiveTab("members")}
+                    onClick={() => setActiveTab("asistenti")}
                     className={`px-4 py-2 rounded-md ${
-                        activeTab === "members"
+                        activeTab === "asistenti"
                             ? "bg-blue-600 text-white"
                             : "bg-gray-200 hover:bg-gray-300"
                     }`}
                 >
-                    Members
+                    Asistenti
                 </button>
             </div>
 
             {/* Content */}
-            {activeTab === "groups" && <Groups />}
-            {activeTab === "members" && <Members />}
+            {activeTab === "departamenti" && <Departamenti />}
+            {activeTab === "asistenti" && <Asistenti />}
         </div>
     );
 };

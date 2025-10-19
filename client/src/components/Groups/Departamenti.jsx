@@ -1,18 +1,18 @@
 ﻿import React, { useState, useEffect } from "react";
 import api from "../../authService/AxiosInstance";
 
-const Groups = () => {
-    const [groups, setGroups] = useState([]);
-    const [form, setForm] = useState({ id: 0, groupName: "", description: "" });
+const Departamenti = () => {
+    const [departamenti, setDepartamenti] = useState([]);
+    const [form, setForm] = useState({ id: 0, emriDepartamentitName: "", numriZyrave: "" });
     const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
-        fetchGroups();
+        fetchDepartamenti();
     }, []);
 
-    const fetchGroups = async () => {
-        const res = await api.get("/Group");
-        setGroups(res.data);
+    const fetchDepartamenti = async () => {
+        const res = await api.get("/Departamenti");
+        setDepartamenti(res.data);
     };
 
     const handleChange = (e) => {
@@ -22,28 +22,28 @@ const Groups = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (isEditing) {
-            await api.put(`/Group/${form.id}`, form);
+            await api.put(`/Departamenti/${form.id}`, form);
         } else {
-            await api.post("/Group", form);
+            await api.post("/Departamenti", form);
         }
-        setForm({ id: 0, groupName: "", description: "" });
+        setForm({ id: 0, emriDepartamentitName: "", numriZyrave: "" });
         setIsEditing(false);
-        fetchGroups();
+        fetchDepartamenti();
     };
 
-    const handleEdit = (group) => {
-        setForm(group);
+    const handleEdit = (departamenti) => {
+        setForm(departamenti);
         setIsEditing(true);
     };
 
     const handleDelete = async (id) => {
-        await api.delete(`/Group/${id}`);
-        fetchGroups();
+        await api.delete(`/Departamenti/${id}`);
+        fetchDepartamenti();
     };
 
     return (
         <div className="bg-white p-6 rounded-xl shadow-md">
-            <h2 className="text-2xl font-bold mb-4">Groups</h2>
+            <h2 className="text-2xl font-bold mb-4">Departamenti</h2>
 
             {/* Form */}
             <form
@@ -52,17 +52,17 @@ const Groups = () => {
             >
                 <input
                     type="text"
-                    name="groupName"
-                    placeholder="Group Name"
-                    value={form.groupName}
+                    name="emriDepartamentitName"
+                    placeholder="Departamenti Name"
+                    value={form.emriDepartamentitName}
                     onChange={handleChange}
                     className="border rounded-md px-3 py-2 flex-1"
                 />
                 <input
                     type="text"
-                    name="description"
-                    placeholder="Description"
-                    value={form.description}
+                    name="numriZyrave"
+                    placeholder="NumriZyreve"
+                    value={form.numriZyrave}
                     onChange={handleChange}
                     className="border rounded-md px-3 py-2 flex-1"
                 />
@@ -76,14 +76,14 @@ const Groups = () => {
 
             {/* List */}
             <ul className="space-y-3">
-                {groups.map((g) => (
+                {departamenti.map((g) => (
                     <li
                         key={g.id}
                         className="flex justify-between items-center border rounded-lg px-4 py-2"
                     >
             <span>
-              <span className="font-semibold">{g.groupName}</span> –{" "}
-                {g.description}
+              <span className="font-semibold">{g.emriDepartamentitName}</span> –{" "}
+                {g.numriZyrave}
             </span>
                         <div className="flex gap-2">
                             <button
@@ -106,4 +106,4 @@ const Groups = () => {
     );
 };
 
-export default Groups;
+export default Departamenti;

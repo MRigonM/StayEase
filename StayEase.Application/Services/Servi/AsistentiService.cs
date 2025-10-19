@@ -4,8 +4,8 @@ using StayEase.Domain.Interfaces.Services.Servi;
 
 namespace StayEase.Application.Services.Servi;
 
-public class GroupService : GenericService<Group, int>, IGroupService
+public class AsistentiService : GenericService<Asistenti, int>, IAsistentiService
 {
-    public GroupService(IGenericRepository<Group, int> repo, IUnitOfWork uow)
+    public AsistentiService(IGenericRepository<Asistenti, int> repo, IUnitOfWork uow)
         : base(repo, uow) { }
 }

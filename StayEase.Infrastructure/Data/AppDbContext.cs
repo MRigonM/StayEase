@@ -70,7 +70,7 @@ public class AppDbContext : IdentityDbContext<AppUser>
     public DbSet<Review> Reviews { get; set; }
     public DbSet<RoomService> roomServices { get; set; }
     
-    public DbSet<Member> Members { get; set; }
+    public DbSet<Asistenti> Asistentis { get; set; }
 
-    public DbSet<Group> Groups { get; set; }
+    public DbSet<Departamenti> Departamentis { get; set; }
 }

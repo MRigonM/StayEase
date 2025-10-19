@@ -59,8 +59,8 @@ public static class ApplicationServices
             Services.AddScoped<IBookService, BookService>();
             Services.AddScoped<IReviewService, ReviewServices>();
             
-            Services.AddScoped<IMemberService, MemberService>();
-            Services.AddScoped<IGroupService, GroupService>();
+            Services.AddScoped<IAsistentiService, AsistentiService>();
+            Services.AddScoped<IDepartamentiService, DepartamentiService>();
             
             Services.AddHttpContextAccessor();
             

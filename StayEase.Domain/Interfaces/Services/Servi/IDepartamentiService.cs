@@ -2,7 +2,7 @@
 
 namespace StayEase.Domain.Interfaces.Services.Servi;
 
-public interface IGroupService : IGenericService<Group, int>
+public interface IDepartamentiService : IGenericService<Departamenti, int>
 {
     
 }

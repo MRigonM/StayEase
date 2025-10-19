@@ -2,7 +2,7 @@
 
 namespace StayEase.Domain.Interfaces.Services.Servi;
 
-public interface IMemberService : IGenericService<Member, int>
+public interface IAsistentiService : IGenericService<Asistenti, int>
 {
     
 }

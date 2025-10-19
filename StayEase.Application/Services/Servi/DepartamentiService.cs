@@ -4,8 +4,8 @@ using StayEase.Domain.Interfaces.Services.Servi;
 
 namespace StayEase.Application.Services.Servi;
 
-public class MemberService : GenericService<Member, int>, IMemberService
+public class DepartamentiService : GenericService<Departamenti, int>, IDepartamentiService
 {
-    public MemberService(IGenericRepository<Member, int> repo, IUnitOfWork uow)
+    public DepartamentiService(IGenericRepository<Departamenti, int> repo, IUnitOfWork uow)
         : base(repo, uow) { }
 }
